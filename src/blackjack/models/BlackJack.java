@@ -20,6 +20,7 @@ public class BlackJack extends MainFrame{
     public static void main(String[] args) {
         // TODO code application logic here
         //Game g=new Game("Martin");
+        
         BlackJack blackJack = new BlackJack();
         blackJack.setVisible(true);
         blackJack.setDefaultCloseOperation(EXIT_ON_CLOSE);
