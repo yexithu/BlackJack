@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+
 /**
  *
  * @author Re
@@ -28,20 +29,20 @@ public class Token extends JLabel{
     
     public int parValue;
     public int centerX, centerY;
-    public int radius = 40;
+    static public int radius = 40;
     
-    public static BufferedImage tokensBufferedImage;
+    private static BufferedImage tokensBufferedImage;
     
     private ImageIcon tokenIcon;
+    private MouseAdapter mouseAdapter;
     private TokenClickedListener tokenClickedListener;
-    
+    private BufferedImage originImage;
     static {
         try {    
             tokensBufferedImage = ImageIO.read(new FileInputStream("res/tokens.png"));
         } catch (IOException ex) {
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(tokensBufferedImage.getType());
     }
     
     public Token(int parValue, int centerX, int centerY) {
@@ -49,14 +50,13 @@ public class Token extends JLabel{
         this.centerX = centerX;
         this.centerY = centerY;
         tokenIcon = new ImageIcon();
-        tokenIcon.setImage(getSpecificToken());
-        
         this.setIcon(tokenIcon);
-        this.setSize(tokenIcon.getIconWidth(), tokenIcon.getIconHeight());
+        setOriginBufferedImage();
+        setTokenSize(radius);
         this.setLocation(centerX - radius, centerY - radius);
     }
     
-    private Image getSpecificToken( ) {
+    private void setOriginBufferedImage( ) {
         int startX = 0;
         switch(this.parValue) {
             case 1:
@@ -79,26 +79,15 @@ public class Token extends JLabel{
                 break;                
         }
         int length = tokensBufferedImage.getHeight();
-        BufferedImage originImage = tokensBufferedImage.getSubimage(startX * length, 0, length, length);
-        originImage.getScaledInstance(2 * radius, 2 * radius, java.awt.Image.SCALE_SMOOTH);
-        return (originImage.getScaledInstance(2 * radius, 2 * radius, java.awt.Image.SCALE_SMOOTH));        
+        originImage = tokensBufferedImage.getSubimage(startX * length, 0, length, length);
     }
     
-    private void setMouseAdapter( ) {
-        MouseAdapter mouseAdapter = new MouseAdapter() {
-             public void mousePressed(MouseEvent me){
-                int mouseX = me.getPoint().x;
-                int mouseY = me.getPoint().y;
-                if(Point.distance(mouseX, mouseY, radius, radius) < radius) {
-                    tokenClickedListener.onTokensClicked(parValue);
-                }
-             }
-         };
-        this.addMouseListener(mouseAdapter);
+    public void setTokenSize(int targetRadius) {
+        tokenIcon.setImage(originImage.getScaledInstance(targetRadius * 2, targetRadius * 2, java.awt.Image.SCALE_SMOOTH));
+        this.setSize(tokenIcon.getIconWidth(), tokenIcon.getIconHeight());
     }
-    
-    
-    
+
+       
     /*
     Token按钮接口
     */
@@ -114,6 +103,21 @@ public class Token extends JLabel{
     */
     public void setClickedListener(TokenClickedListener listener) {
         tokenClickedListener = listener;
-        this.setMouseAdapter();
+                mouseAdapter = new MouseAdapter() {
+            
+            @Override
+            public void mousePressed(MouseEvent me){
+                int mouseX = me.getPoint().x;
+                int mouseY = me.getPoint().y;
+                if(Point.distance(mouseX, mouseY, radius, radius) < radius) {
+                   tokenClickedListener.onTokensClicked(parValue);
+                }
+            }
+        };
+        this.addMouseListener(mouseAdapter);
     }
+    
+    public void removeClickedListener() {
+        this.removeMouseListener(mouseAdapter);
+    } 
 }

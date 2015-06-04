@@ -22,7 +22,7 @@ public class Card implements Cloneable {
             this.Name = Name;
         }
 
-        @Override
+        @Override   
         public String toString() {
             return Name;
         }

@@ -19,7 +19,7 @@ public class MainFrame extends JFrame{
     public MainFrame() {
         BetPanel betPanel = new BetPanel();
         add(betPanel);
-
-        setSize(660, 400);
+        
+        setSize(656, 399);
     }    
 }
