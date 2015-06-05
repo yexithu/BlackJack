@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 public class Animation {
     
     static private int runTime = 400;
+    
+    
     static public class CardAnimation implements Runnable{
         
         final private JPanel panel;
@@ -81,6 +83,54 @@ public class Animation {
         public Token getToken() {
             return this.token;               
         }
+    }
+    
+    static public class PokerTurn implements Runnable {
+
+        final private JPanel panel;
+        private Poker poker;
+        private int centerX;
+        private int centerY;
+        private double maxScaleRate = 1.15;
+        public PokerTurn(JPanel panel, Poker poker) {
+            this.panel = panel;
+            this.poker = poker;
+            this.centerX = poker.getX() + poker.getWidth() / 2;
+            this.centerY = poker.getY() + poker.getHeight() / 2;
+        }
+        @Override
+        public void run() {
+            int perFrame = runTime / 10;
+            double angle = 0;
+            boolean originSide = poker.isBack;
+            System.out.println("Test" + Math.cos(60));
+            for(int i = 0; i < 10; ++i) {
+                angle += Math.PI / 10;
+                double rate = Math.cos(angle);
+                rate = Math.abs(rate);
+                double temp = maxScaleRate - 1;
+                double scaleRate = maxScaleRate -Math.abs((temp / 5)* i - temp);
+                System.out.println("Number" + i + "  " + (int)(Poker.height * scaleRate));
+                if(angle >= Math.PI / 2 && poker.isBack == originSide) {
+                    System.out.println("Turn");
+                    poker.turnOver();
+                }
+                
+                
+                poker.setCardSize((int) (Poker.width * rate * scaleRate), (int)(Poker.height * scaleRate));
+                poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
+                try {
+                    Thread.sleep(perFrame);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Animation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+            
+            poker.setCardSize(Poker.width, Poker.height);
+            poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
+        }
+        
     }
 }
     

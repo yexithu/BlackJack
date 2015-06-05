@@ -31,7 +31,7 @@ public class BetPanel extends JPanel{
     static private ArrayList<Token> defaultTokens;
     static public ArrayList<Token> tableTokens;
     static HashMap leftTokens;
-    
+    static Poker cardGui;
     private int totalTokenValue = 0;
     public BetPanel() {
         setLayout(null);
@@ -60,7 +60,7 @@ public class BetPanel extends JPanel{
     }
     
     private void setDefaultToken(JPanel thisPanel) {
-        CardGui cardGui = new CardGui(518, 4, true);
+        cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
         add(cardGui);
         setLayout(null);
         defaultTokens = new ArrayList<>();
@@ -111,6 +111,9 @@ public class BetPanel extends JPanel{
             defaultToken.setEnabled(false);
         }
         new Thread(addedToken).start(); 
+               
+        Animation.PokerTurn pokerTurn = new Animation.PokerTurn(this, cardGui);
+        new Thread(pokerTurn).start();
     }
 }
 

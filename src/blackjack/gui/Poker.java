@@ -22,12 +22,12 @@ import javax.swing.JLabel;
  *
  * @author Re
  */
-public class CardGui extends JLabel{
+public class Poker extends JLabel{
     
     public static int width = 110, height = 155;
     public int positionX, positionY;
     public Card card;
-    private boolean isBack = false;
+    public boolean isBack = false;
     
     
     static private BufferedImage cardsBufferedImage;
@@ -45,25 +45,26 @@ public class CardGui extends JLabel{
         }
     }
     
-    public CardGui(int posX, int posY) {
+    public Poker(int posX, int posY) {
         this.positionX = posX;
         this.positionY = posY;
         cardIcon = new ImageIcon();
     }
-    public CardGui(int posX, int posY, boolean bool) {
-        this(posX, posY);
-        this.isBack = bool;
-        setOriginImage();
-        setCardSize(width, height);
-    }
-    
-    public CardGui(int posX, int posY, Card card) {
+
+    public Poker(int posX, int posY, Card card) {
         this(posX, posY);
         this.card = card;
         setOriginImage();
         setCardSize(width, height);
     } 
     
+    public Poker(int posX, int posY, Card card, boolean bool) {
+        this(posX, posY, card);
+        this.isBack = bool;
+        setOriginImage();
+        setCardSize(width, height);
+    }
+        
     
     public void setClickedListener(CardClickedListener cardListener) {
         this.cardClickedListener = cardListener;
@@ -110,12 +111,19 @@ public class CardGui extends JLabel{
     }
     
     public void setCardSize(int width, int height) {
-
+        setOriginImage();
+        width = Math.max(width, 1);
         cardIcon.setImage(originImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH));
         
         setIcon(cardIcon);
         setSize(cardIcon.getIconWidth(), cardIcon.getIconHeight());
         setLocation(positionX, positionY);
+    }
+    
+    public void turnOver() {
+        this.isBack = !this.isBack;
+        setOriginImage();
+        setCardSize(this.getWidth(), this.getHeight());
     }
 }
 
