@@ -70,6 +70,8 @@ public class Animation {
                     Logger.getLogger(Animation.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
+            token.setTokenSize(Token.radius - BetPanel.tableTokens.size() / 3);
         }
         
          /**
@@ -77,9 +79,7 @@ public class Animation {
          * @return
          */
         public Token getToken() {
-            System.out.println("InRun" + String.valueOf(this.token == null));
-            return this.token;
-                
+            return this.token;               
         }
     }
 }

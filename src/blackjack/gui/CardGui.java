@@ -27,12 +27,15 @@ public class CardGui extends JLabel{
     public static int width = 110, height = 155;
     public int positionX, positionY;
     public Card card;
+    private boolean isBack = false;
+    
     
     static private BufferedImage cardsBufferedImage;
     
     private ImageIcon cardIcon;
     private CardClickedListener cardClickedListener;
     private MouseAdapter mouseAdapter;
+    private BufferedImage originImage;
     
     static {
         try {    
@@ -42,17 +45,23 @@ public class CardGui extends JLabel{
         }
     }
     
-    public CardGui(int posX, int posY, Card card) {
+    public CardGui(int posX, int posY) {
         this.positionX = posX;
         this.positionY = posY;
-        this.card = card;
-        
         cardIcon = new ImageIcon();
-        cardIcon.setImage(getSpecificCard());
-        
-        setIcon(cardIcon);
-        setSize(cardIcon.getIconWidth(), cardIcon.getIconHeight());
-        setLocation(positionX, positionY);
+    }
+    public CardGui(int posX, int posY, boolean bool) {
+        this(posX, posY);
+        this.isBack = bool;
+        setOriginImage();
+        setCardSize(width, height);
+    }
+    
+    public CardGui(int posX, int posY, Card card) {
+        this(posX, posY);
+        this.card = card;
+        setOriginImage();
+        setCardSize(width, height);
     } 
     
     
@@ -82,15 +91,31 @@ public class CardGui extends JLabel{
         void onCardClicked();
     }
     
-    private Image getSpecificCard() {
+    private void setOriginImage() {
+
         int startX = 0, startY = 0;
         int wid, hei;
         wid = cardsBufferedImage.getWidth() / 16;
         hei = cardsBufferedImage.getHeight() / 4;
-        
-        BufferedImage subBufferedImage = cardsBufferedImage.getSubimage(startX, startY, wid, hei);
-        return (subBufferedImage.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH));
+        if(isBack) {
+            startX = 13 * wid;
+            startY = 0 * hei;
+        }
+        else {
+            startX = card.getValueIndex() * wid;
+            startY = card.getTypeIndex() * hei;
+        }
+
+        originImage = cardsBufferedImage.getSubimage(startX, startY, wid, hei);
     }
     
+    public void setCardSize(int width, int height) {
+
+        cardIcon.setImage(originImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH));
+        
+        setIcon(cardIcon);
+        setSize(cardIcon.getIconWidth(), cardIcon.getIconHeight());
+        setLocation(positionX, positionY);
+    }
 }
 

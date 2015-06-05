@@ -6,13 +6,13 @@
 package blackjack.gui;
 
 import blackjack.models.Card;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,14 +29,17 @@ import javax.swing.OverlayLayout;
 public class BetPanel extends JPanel{
     
     static private ArrayList<Token> defaultTokens;
-    static private ArrayList<Token> tableTokens;
-    private JPanel overLapPanel;
+    static public ArrayList<Token> tableTokens;
+    static HashMap leftTokens;
+    
+    private int totalTokenValue = 0;
     public BetPanel() {
         setLayout(null);
         setDefaultToken(this);
     }
     
     public void paintComponent(Graphics g) {
+        
         super.paintComponent(g);
 
         ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
@@ -57,12 +60,13 @@ public class BetPanel extends JPanel{
     }
     
     private void setDefaultToken(JPanel thisPanel) {
-        CardGui cardGui = new CardGui(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT));
+        CardGui cardGui = new CardGui(518, 4, true);
         add(cardGui);
         setLayout(null);
         defaultTokens = new ArrayList<>();
         tableTokens = new ArrayList<>();
         
+        leftTokens = new HashMap(6);
         Token token1 = new Token(1, 100, 85);
         Token token5 = new Token(5, 100, 185);
         Token token25 = new Token(25, 100, 285);
@@ -79,27 +83,33 @@ public class BetPanel extends JPanel{
         
         
         for (Token defaultToken : defaultTokens) {
-            defaultToken.setClickedListener(new Token.TokenClickedListener() {
-
-            @Override
-            public void onTokensClicked(int parValue) {
-               createBetToken(defaultToken);
-            };
-        });
-        }
-
-        for (Token defaultToken : defaultTokens) {
             thisPanel.add(defaultToken);
-        }  
+            leftTokens.put(defaultToken.parValue, 10);
+            defaultToken.setClickedListener(new Token.TokenClickedListener() {
+                @Override
+                public void onTokensClicked(int parValue) {
+                    System.out.println("Clicked");
+                    if(totalTokenValue + defaultToken.parValue <= 500)
+                        createBetToken(defaultToken);
+                };
+            });
+        }
     }
     
     private void createBetToken(Token defaultToken) {
         int randomX = 380, randomY = 185;
         Random random = new Random();
-        randomX += random.nextInt(40) - 20;
-        randomY += random.nextInt(40) - 20;
+        randomX += random.nextInt(36) - 18;
+        randomY += random.nextInt(36) - 18;
         Animation.CardAnimation addedToken = new Animation.CardAnimation(this, defaultToken.parValue, defaultToken.centerX, defaultToken.centerY, randomX, randomY);
         tableTokens.add(0, addedToken.getToken());
+        leftTokens.replace(defaultToken.parValue, ((int)leftTokens.get(defaultToken.parValue) - 1));
+        totalTokenValue += defaultToken.parValue;
+        
+        if((int)leftTokens.get(defaultToken.parValue) == 0) {
+            defaultToken.setVisible(false);
+            defaultToken.setEnabled(false);
+        }
         new Thread(addedToken).start(); 
     }
 }
