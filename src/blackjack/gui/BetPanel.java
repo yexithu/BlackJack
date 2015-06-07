@@ -88,7 +88,6 @@ public class BetPanel extends JPanel{
             defaultToken.setClickedListener(new Token.TokenClickedListener() {
                 @Override
                 public void onTokensClicked(int parValue) {
-                    System.out.println("Clicked");
                     if(totalTokenValue + defaultToken.parValue <= 500)
                         createBetToken(defaultToken);
                 };
@@ -101,7 +100,8 @@ public class BetPanel extends JPanel{
         Random random = new Random();
         randomX += random.nextInt(36) - 18;
         randomY += random.nextInt(36) - 18;
-        Animation.CardAnimation addedToken = new Animation.CardAnimation(this, defaultToken.parValue, defaultToken.centerX, defaultToken.centerY, randomX, randomY);
+        Token newToken = new Token(defaultToken);
+        Animation.CardAnimation addedToken = new Animation.CardAnimation(this,newToken , randomX, randomY);
         tableTokens.add(0, addedToken.getToken());
         leftTokens.replace(defaultToken.parValue, ((int)leftTokens.get(defaultToken.parValue) - 1));
         totalTokenValue += defaultToken.parValue;
@@ -111,9 +111,6 @@ public class BetPanel extends JPanel{
             defaultToken.setEnabled(false);
         }
         new Thread(addedToken).start(); 
-               
-        Animation.PokerTurn pokerTurn = new Animation.PokerTurn(this, cardGui);
-        new Thread(pokerTurn).start();
     }
 }
 

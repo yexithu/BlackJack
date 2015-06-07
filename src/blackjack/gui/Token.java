@@ -56,6 +56,10 @@ public class Token extends JLabel{
         this.setLocation(centerX - radius, centerY - radius);
     }
     
+    public Token(Token token) {
+        this(token.parValue, token.centerX, token.centerY);
+    }
+    
     private void setOriginBufferedImage( ) {
         int startX = 0;
         switch(this.parValue) {

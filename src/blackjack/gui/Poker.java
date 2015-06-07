@@ -48,6 +48,7 @@ public class Poker extends JLabel{
     public Poker(int posX, int posY) {
         this.positionX = posX;
         this.positionY = posY;
+        setLocation(positionX, positionY);
         cardIcon = new ImageIcon();
     }
 
@@ -61,6 +62,13 @@ public class Poker extends JLabel{
     public Poker(int posX, int posY, Card card, boolean bool) {
         this(posX, posY, card);
         this.isBack = bool;
+        setOriginImage();
+        setCardSize(width, height);
+    }
+    
+    public Poker(Poker poker) {
+        this(poker.getX(), poker.getY(), poker.card);
+        this.isBack = poker.isBack;
         setOriginImage();
         setCardSize(width, height);
     }
@@ -117,7 +125,6 @@ public class Poker extends JLabel{
         
         setIcon(cardIcon);
         setSize(cardIcon.getIconWidth(), cardIcon.getIconHeight());
-        setLocation(positionX, positionY);
     }
     
     public void turnOver() {
