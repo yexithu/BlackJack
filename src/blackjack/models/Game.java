@@ -430,11 +430,11 @@ public class Game {
     public interface GameActionListener{
         void onInitial(Card[] cards);
         /*
-        Index传玩家或者庄家0玩家手牌1庄家手牌，2玩家分牌第一幅，3玩家分牌第二幅
+        Index传玩家0或者庄家1玩家手牌1庄家手牌，2玩家分牌第一幅，3玩家分牌第二幅
         */
         void onDeal(int index, Card card);
         void onBankerDisplayCard();
-        void onShowResult();
+        void onShowResult(State state);
         void onBankerPeek();
         void showChoiceDialog();
     }

@@ -90,7 +90,7 @@ public class PlayPanel extends JPanel {
         });
     }
 
-    private void initial(Card[] cards) {
+    void initial(Card[] cards) {
         dealCard(0, cards[0], true);
         dealCard(1, cards[1], true);
         dealCard(0, cards[2], true);
