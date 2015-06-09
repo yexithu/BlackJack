@@ -29,6 +29,7 @@ public class Game {
     private ArrayList<State> Results;//游戏结果组（有分牌的情况）
     private int pool, bet;//pool：赌池，bet：赌注
 
+    private GameActionListener gameActionListener;
     public Game(String Name) {
         Player = new Player(Name);
         Banker = new Banker();
@@ -420,6 +421,10 @@ public class Game {
     public void playerBust(int i) {
         System.out.println("Bust!\n");
         Results.set(i, State.BANKER_WIN);
+    }
+    
+    public void setGameActionListener(GameActionListener gameActionListener) {
+        this.gameActionListener = gameActionListener;
     }
     
     public interface GameActionListener{

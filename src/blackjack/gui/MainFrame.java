@@ -20,7 +20,8 @@ public class MainFrame extends JFrame {
 
     public static Game game;
     private BetPanel betPanel;
-
+    
+    
     public MainFrame() {
         game = new Game("Martin");
         setSize(656, 399);

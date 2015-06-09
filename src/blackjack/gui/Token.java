@@ -121,7 +121,11 @@ public class Token extends JLabel {
         this.addMouseListener(mouseAdapter);
     }
 
-    public void removeClickedListener() {
+    void pauseClickedListener() {
         this.removeMouseListener(mouseAdapter);
+    }
+    
+    void continueClickedListener() {
+        this.addMouseListener(mouseAdapter);
     }
 }

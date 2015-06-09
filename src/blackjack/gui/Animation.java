@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  * @author Re
  */
 public class Animation {
-    static public class CardAnimation implements Runnable{
+    static public class TokenMove implements Runnable{
         
         final private JPanel panel;
         private Token token;
@@ -27,8 +27,9 @@ public class Animation {
         public int startY;
         public int endX;
         public int endY;
+        public boolean isAdd;
         
-        public CardAnimation(JPanel pan,Token token, int ex, int ey) {
+        public TokenMove(JPanel pan,Token token, int ex, int ey, boolean isAdd) {
             this.panel = pan;
             this.value = token.parValue;
             this.startX = token.centerX;
@@ -36,14 +37,18 @@ public class Animation {
             this.token = token;
             this.endX = ex;
             this.endY = ey;
-            
+            this.isAdd = isAdd;
             panel.add(token);
+            
+            new Thread(this).start();
         }
         
         @Override
         public void run() {
 
             double rate = 1;
+            token.pauseClickedListener();
+//            BetPanel.defaultTokens.get(token.parValue).pauseClickedListener();
             for(int i = 0; i < 3; ++i) {
                 rate += (maxScaleRate - 1)/ 3;
                 int afterX = (int) (token.getX() - Token.radius * (rate - 1));
@@ -71,7 +76,21 @@ public class Animation {
                 }
             }
             
-            token.setTokenSize(Token.radius - BetPanel.tableTokens.size() / 3);
+            token.centerX = endX;
+            token.centerY = endY;
+            
+            token.continueClickedListener();
+//            BetPanel.defaultTokens.get(token.parValue).continueClickedListener();
+            
+            if(isAdd){
+                token.setTokenSize(Token.radius - BetPanel.tableTokens.size() / 3);
+            }
+            else {
+                panel.remove(token);
+                BetPanel.defaultTokens.get(token.parValue).setEnabled(true);
+                BetPanel.defaultTokens.get(token.parValue).setVisible(true);
+                panel.repaint();
+            }         
         }
         
          /**

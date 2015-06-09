@@ -5,7 +5,9 @@
  */
 package blackjack.gui;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -18,7 +20,8 @@ public class PlayPanel extends JPanel {
     private ArrayList<Poker> playerDefaultHands;
     private ArrayList<Poker> bankerHands;
 
-    boolean isSpilt;
+    private PlayerActionListener playerActionListener;
+    private boolean isSpilt;
 
     private int totalBetValue = 0;
     private int totalLeftValue = 0;
@@ -26,6 +29,14 @@ public class PlayPanel extends JPanel {
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
 
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        ImageIcon background = new ImageIcon("res/playBackground.png");
+        g.drawImage(background.getImage(), 0, 0, this);
+        
+    }
+    
     private void setLeftValue() {
         this.leftValueLabel.setText(String.valueOf(totalLeftValue));
     }
@@ -39,20 +50,18 @@ public class PlayPanel extends JPanel {
         this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
 
+    
+    void setPlayerActionListener(PlayerActionListener playerActionListener) {
+        this.playerActionListener = playerActionListener;
+    }
+    
     public interface PlayerActionListener {
-
         void onPlayerStand();
-
         void onPlayerHit();
-
         void onPlayerSpilt();
-
-        void onPlayerSurrand();
-        
-        void onPlayerDouble();
-        
-        void onPlayerTakeInsure();
-        
+        void onPlayerSurrand();       
+        void onPlayerDouble();        
+        void onPlayerTakeInsure();       
     }
 
 }
