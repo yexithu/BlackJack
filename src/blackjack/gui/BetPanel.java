@@ -106,12 +106,13 @@ public class BetPanel extends JPanel{
     
     private void setDefaultCard() {
         cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
+        cardGui.isCoverred = false;
         add(cardGui);
         
         cardGui.setClickedListener(new Poker.CardClickedListener() {
-
             @Override
             public void onCardClicked() {
+                System.out.println("pokerClicked");
                 betFinishedListener.onBetFinished(totalBetValue);
             }
         });

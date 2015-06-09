@@ -25,9 +25,11 @@ import javax.swing.JLabel;
 public class Poker extends JLabel{
     
     public static int width = 110, height = 155;
+    public static int defultX = 518, defaultY = 4;
     public int positionX, positionY;
     public Card card;
     public boolean isBack = false;
+    public boolean isCoverred = true;
     
     
     static private BufferedImage cardsBufferedImage;
@@ -80,7 +82,15 @@ public class Poker extends JLabel{
             
             @Override
             public void mousePressed(MouseEvent me) {
-                cardClickedListener.onCardClicked();
+                if(!isCoverred){
+                    cardClickedListener.onCardClicked();    
+                }
+                else {
+                    if(me.getX() < 25) {
+                        cardClickedListener.onCardClicked();    
+                    }
+                }
+                
             }
         };
         this.addMouseListener(mouseAdapter);

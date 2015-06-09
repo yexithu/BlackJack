@@ -118,6 +118,7 @@ public class Animation {
             this.centerY = poker.getY() + poker.getHeight() / 2;
             
             panel.add(this.poker);
+            new Thread(this).start();
         }
         @Override
         public void run() {
@@ -170,6 +171,7 @@ public class Animation {
             this.endY = eY;
             
             panel.add(this.poker);
+            new Thread(this).start();
         }
         
         @Override
@@ -212,6 +214,7 @@ public class Animation {
                     Logger.getLogger(Animation.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            poker.setLocation(endX, endY);
         }
     }
     
@@ -234,6 +237,7 @@ public class Animation {
             this.centerY = poker.getY() + poker.getHeight() / 2;
             
             panel.add(this.poker);
+            new Thread(this).start();
         }
         
         @Override
@@ -265,6 +269,7 @@ public class Animation {
                     Logger.getLogger(Animation.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            poker.setLocation(endX, endY);
         }
     }
 }

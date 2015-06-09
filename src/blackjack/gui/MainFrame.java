@@ -20,14 +20,17 @@ public class MainFrame extends JFrame {
 
     public static Game game;
     private BetPanel betPanel;
+    private PlayPanel playPanel;
     
     
     public MainFrame() {
+        
         game = new Game("Martin");
         setSize(656, 399);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         setBetPanel();
+        //setPlayPanel();
         setVisible(true);
     }
 
@@ -37,13 +40,23 @@ public class MainFrame extends JFrame {
         betPanel.setBetFinishedListener(new BetPanel.BetFinishedListener() {
             @Override
             public void onBetFinished(int betNum) {
-                game.refresh();//重置游戏状态，新开一局游戏
-                game.shuffle();//洗牌
-                game.bet(betNum);
+//                game.refresh();//重置游戏状态，新开一局游戏
+//                game.shuffle();//洗牌
+//                game.bet(betNum);
+                remove(betPanel);
+                repaint();
+                setPlayPanel();
             }
         });
 
         add(betPanel);
+    }
+    
+    private void setPlayPanel() {
+        playPanel = new PlayPanel();
+        add(playPanel);
+        paintComponents(getGraphics());
+
     }
     
 }
