@@ -32,10 +32,18 @@ public class BetPanel extends JPanel{
     static public ArrayList<Token> tableTokens;
     static HashMap leftTokens;
     static Poker cardGui;
-    private int totalTokenValue = 0;
+    
+    private int totalBetValue = 0;
+    private int totalLeftValue = 0;
+    
+    private JLabel betValueLabel;
+    private JLabel leftValueLabel;
+    
+    private BetFinishedListener betFinishedListener;
     public BetPanel() {
         setLayout(null);
         setDefaultToken(this);
+        setDefaultCard();
     }
     
     public void paintComponent(Graphics g) {
@@ -60,9 +68,6 @@ public class BetPanel extends JPanel{
     }
     
     private void setDefaultToken(JPanel thisPanel) {
-        cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
-        add(cardGui);
-        setLayout(null);
         defaultTokens = new ArrayList<>();
         tableTokens = new ArrayList<>();
         
@@ -88,11 +93,24 @@ public class BetPanel extends JPanel{
             defaultToken.setClickedListener(new Token.TokenClickedListener() {
                 @Override
                 public void onTokensClicked(int parValue) {
-                    if(totalTokenValue + defaultToken.parValue <= 500)
+                    if(totalBetValue + defaultToken.parValue <= 500)
                         createBetToken(defaultToken);
                 };
             });
         }
+    }
+    
+    private void setDefaultCard() {
+        cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
+        add(cardGui);
+        
+        cardGui.setClickedListener(new Poker.CardClickedListener() {
+
+            @Override
+            public void onCardClicked() {
+                betFinishedListener.onBetFinished(totalBetValue);
+            }
+        });
     }
     
     private void createBetToken(Token defaultToken) {
@@ -104,13 +122,34 @@ public class BetPanel extends JPanel{
         Animation.CardAnimation addedToken = new Animation.CardAnimation(this,newToken , randomX, randomY);
         tableTokens.add(0, addedToken.getToken());
         leftTokens.replace(defaultToken.parValue, ((int)leftTokens.get(defaultToken.parValue) - 1));
-        totalTokenValue += defaultToken.parValue;
+        totalBetValue += defaultToken.parValue;
         
         if((int)leftTokens.get(defaultToken.parValue) == 0) {
             defaultToken.setVisible(false);
             defaultToken.setEnabled(false);
         }
         new Thread(addedToken).start(); 
+    }
+    
+    private void setLeftValue() {
+        this.leftValueLabel.setText(String.valueOf(totalLeftValue));
+    }
+    
+    public void setLeftValue(int value) {
+        this.totalLeftValue = value;
+        setLeftValue();
+    }
+    
+    private void setBetValue() {
+        this.betValueLabel.setText(String.valueOf(totalBetValue));
+    }
+    
+    public interface BetFinishedListener {
+        void onBetFinished(int bet);
+    }
+    
+    public void setBetFinishedListener(BetFinishedListener listener) {
+        this.betFinishedListener = listener;
     }
 }
 

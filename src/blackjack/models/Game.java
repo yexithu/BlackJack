@@ -6,10 +6,10 @@
 package blackjack.models;
 
 import blackjack.util.ConsoleScanner;
+
 import java.util.ArrayList;
 
 /**
- *
  * @author Martin
  */
 //游戏过程的抽象表示
@@ -34,77 +34,78 @@ public class Game {
         Banker = new Banker();
         Setting = blackjack.models.Setting.example();
         Deck = new Deck(Setting.getDeckNum());
+
+        Deck.shuffle();//第一次运行前先洗牌
     }
 
     public void run() {
-        Deck.shuffle();//第一次运行前先洗牌
-        while (start()) {
-            refresh();//重置游戏状态，新开一局游戏
-            shuffle();//洗牌
-            bet();//下注
-            initial();//发初始牌等初始化
-            //玩家拿到BlackJack的提示
-            if (Player.isBJ()) {
-                System.out.println("You get BJ!\n");
+
+        //到此运行至bet()
+        //MainFrame 调用返回四张牌，放在数组里
+        initial();//发初始牌等初始化, 
+
+        //玩家拿到BlackJack的提示
+        if (Player.isBJ()) {
+            System.out.println("You get BJ!\n");
+        }
+        //庄家需要偷窥的情况
+        if (Banker.isPeek()) {
+            System.out.println("The banker peeks~\n");
+            //买保险
+            if (isPlayerInsure()) {
+                playerInsure();
             }
-            //庄家需要偷窥的情况
-            if (Banker.isPeek()) {
-                System.out.println("The banker peeks~\n");
-                //买保险
-                if (isPlayerInsure()) {
-                    playerInsure();
-                }
-                //庄家拿到BlackJack的情况
-                if (Banker.isBJ()) {
-                    Banker.display();
-                    System.out.println("Banker get BJ!\n");
-                    if (Player.isBJ()) {
-                        Result = State.PUSH;
-//                        result();
-                    } else {
-                        Result = State.BANKER_WIN;
-//                        result();
-                    }
-                } else {
-                    System.out.println("\nNothing happened~\n");
-                }
-            }
-            //如果庄家不是BJ，游戏继续
-            if (!Banker.isBJ()) {
-                //如果玩家拿到BJ的情况
+            //庄家拿到BlackJack的情况
+            if (Banker.isBJ()) {
+                Banker.display();
+                System.out.println("Banker get BJ!\n");
                 if (Player.isBJ()) {
-                    Banker.display();
-                    Result = State.PLAYER_WIN;
-//                    result();
-                } else { //如果玩家没拿到BJ，游戏继续
-                    playerSplit();//分牌
-                    //如果玩家进行了分牌，游戏按照分牌后的流程进行
-                    if (Player.isSplit()) {
-                        splitInitial();//分牌后的初始化操作
-                        splitProcess();//分牌后的游戏流程
-                    } else if (isPlayerDouble()) { //如果玩家没有分牌，游戏按没有分牌的简单情形继续
-                        playerDouble();//加倍
-                        if (Player.isBust()) {
-                            playerBust();//玩家爆牌的处理
-                        } else {
-                            bankerAct();//如果加倍后没有爆牌，庄家行动
-                            Result = compare(Result);//更新游戏结果
-//                            result();
-                        }
-                    } else {
-                        playerChoice();//如果玩家没有加倍，玩家选择要牌/停牌/投降
-                        if (!Player.isBust() && !Player.isSurrender()) {
-                            bankerAct();//如果玩家没有爆牌也没有投降，庄家行动
-                            Result = compare(Result);//更新游戏结果
-//                            result();
-                        }
-                    }
+                    Result = State.PUSH;
+//                        result();
+                } else {
+                    Result = State.BANKER_WIN;
+//                        result();
                 }
-            }
-            if (!Player.isSplit()) {
-                result();//如果玩家没有分牌，按照简单情形计算游戏结果
+            } else {
+                System.out.println("\nNothing happened~\n");
             }
         }
+        //如果庄家不是BJ，游戏继续
+        if (!Banker.isBJ()) {
+            //如果玩家拿到BJ的情况
+            if (Player.isBJ()) {
+                Banker.display();
+                Result = State.PLAYER_WIN;
+//                    result();
+            } else { //如果玩家没拿到BJ，游戏继续
+                playerSplit();//分牌
+                //如果玩家进行了分牌，游戏按照分牌后的流程进行
+                if (Player.isSplit()) {
+                    splitInitial();//分牌后的初始化操作
+                    splitProcess();//分牌后的游戏流程
+                } else if (isPlayerDouble()) { //如果玩家没有分牌，游戏按没有分牌的简单情形继续
+                    playerDouble();//加倍
+                    if (Player.isBust()) {
+                        playerBust();//玩家爆牌的处理
+                    } else {
+                        bankerAct();//如果加倍后没有爆牌，庄家行动
+                        Result = compare(Result);//更新游戏结果
+//                            result();
+                    }
+                } else {
+                    playerChoice();//如果玩家没有加倍，玩家选择要牌/停牌/投降
+                    if (!Player.isBust() && !Player.isSurrender()) {
+                        bankerAct();//如果玩家没有爆牌也没有投降，庄家行动
+                        Result = compare(Result);//更新游戏结果
+//                            result();
+                    }
+                }
+            }
+        }
+        if (!Player.isSplit()) {
+            result();//如果玩家没有分牌，按照简单情形计算游戏结果
+        }
+
     }
 
     private void initial() {
@@ -185,12 +186,10 @@ public class Game {
         System.out.println("Burn " + i + " cards\n");
     }
 
-    public void bet() {
-        Player.showCounter();
+    public void bet(int betNum) {
         System.out.println("How much do you want to bet?");
-        int key = ConsoleScanner.getRangeInt(Setting.getBetMin(), Setting.getBetMax());
-        Player.changeCounter(-key);
-        bet = key;
+        Player.changeCounter(-betNum);
+        bet = betNum;
         pool = bet;
     }
 
@@ -421,5 +420,14 @@ public class Game {
     public void playerBust(int i) {
         System.out.println("Bust!\n");
         Results.set(i, State.BANKER_WIN);
+    }
+    
+    public interface GameActionListener{
+        void onInitial(Card[] card);
+        void onDeal(int index, Card card, boolean isBack);
+        void onBankerDisplayCard();
+        void onShowResult();
+        void onBankerPeek();
+        void showChoiceDialog();
     }
 }
