@@ -109,15 +109,21 @@ public class Game {
 
     }
 
-    private void initial() {
-        Player.deal(Deck.getCard());
-        Banker.deal(Deck.getCard());
-        Player.deal(Deck.getCard());
-        Banker.deal(Deck.getCard());
+    public void initial() {
+        Card[] cards = new Card[4];
+        for(int i = 0; i < 4; ++i) {
+            cards[i] = Deck.getCard();
+        }
+        Player.deal(cards[0]);
+        Banker.deal(cards[1]);
+        Player.deal(cards[2]);
+        Banker.deal(cards[3]);
         Player.setBJ();
         Banker.setBJ();
         Banker.displayFirstCard();
         Player.display();
+        
+        gameActionListener.onInitial(cards);
     }
 
     private void bankerAct() {

@@ -77,15 +77,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                System.out.println("pokerClicked");
                 //player-ActionListener.onPlayerHit();
-                Card[] cards = new Card[4];
-                for (int i = 0; i < cards.length; i++) {
-                    cards[i] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
-
-                }
-
-                initial(cards);
+                playerActionListener.onPlayerHit();
             }
         });
     }

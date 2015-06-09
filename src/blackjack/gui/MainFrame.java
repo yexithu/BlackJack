@@ -49,6 +49,8 @@ public class MainFrame extends JFrame {
                 remove(betPanel);
                 repaint();
                 setPlayPanel();
+                
+                game.initial();
             }
         });
 
@@ -75,7 +77,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onPlayerSpilt() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                
             }
 
             @Override
@@ -98,7 +100,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onInitial(Card[] cards) {
-
+                playPanel.initial(cards);
             }
 
             @Override
