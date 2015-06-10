@@ -78,9 +78,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                //player-ActionListener.onPlayerHit();
                 playerActionListener.onPlayerHit();
-                JOptionPane.showMessageDialog(null, "在对话框内显示的描述性的文字", "标题条文字串", JOptionPane.ERROR_MESSAGE);
+              
             }
         });
     }
@@ -150,6 +149,16 @@ public class PlayPanel extends JPanel {
         }
     }
 
+    public void showMessageDialog(String input) {
+        JOptionPane.showMessageDialog(null, input, "Hint", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void showChoiceDialog() {
+        int result = JOptionPane.showConfirmDialog(null, "Take Insurerance?");
+        if(result == JOptionPane.YES_OPTION) {
+            playerActionListener.onPlayerTakeInsure();
+        }
+    }
     private void setHandPokers() {
         playerDefaultHands = new ArrayList<>();
         bankerHands = new ArrayList<>();

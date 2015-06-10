@@ -130,7 +130,7 @@ public class MainFrame extends JFrame {
             
             @Override
             public void onShowMessageDialog(String input) {
-                
+                playPanel.showMessageDialog(input);
             }
         });
     }
