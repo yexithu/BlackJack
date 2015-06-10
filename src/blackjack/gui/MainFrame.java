@@ -22,14 +22,13 @@ public class MainFrame extends JFrame {
     public static Game game;
     private BetPanel betPanel;
     private PlayPanel playPanel;
-    
-    
+
     public MainFrame() {
-        
+
         game = new Game("Martin");
         setSize(656, 399);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+
         setGame();
         setBetPanel();
         //setPlayPanel();
@@ -38,69 +37,75 @@ public class MainFrame extends JFrame {
 
     private void setBetPanel() {
         betPanel = new BetPanel();
-        
+
         betPanel.setBetFinishedListener(new BetPanel.BetFinishedListener() {
             @Override
             public void onBetFinished(int betNum) {
                 game.refresh();//重置游戏状态，新开一局游戏
                 game.shuffle();//洗牌
                 game.bet(betNum);
-                
+
                 remove(betPanel);
                 repaint();
                 setPlayPanel();
-                
+
                 game.initial();
             }
         });
 
         add(betPanel);
     }
-    
+
     private void setPlayPanel() {
         playPanel = new PlayPanel();
         add(playPanel);
         paintComponents(getGraphics());
 
-        
         playPanel.setPlayerActionListener(new PlayPanel.PlayerActionListener() {
 
             @Override
-            public void onPlayerStand() {
+            public void onPlayerStand(int index) {
 
             }
 
             @Override
-            public void onPlayerHit() {
- 
+            public void onPlayerHit(int index) {
+
             }
 
             @Override
             public void onPlayerSpilt() {
-                
-            }
-
-            @Override
-            public void onPlayerSurrand() {
 
             }
 
             @Override
-            public void onPlayerDouble() {
+            public void onPlayerSurrand(int index) {
+
+            }
+
+            @Override
+            public void onPlayerDouble(int index) {
+
             }
 
             @Override
             public void onPlayerTakeInsure() {
+
             }
         });
     }
-    
+
     private void setGame() {
         game.setGameActionListener(new Game.GameActionListener() {
 
             @Override
             public void onInitial(Card[] cards) {
                 playPanel.initial(cards);
+            }
+
+            @Override
+            public void onDouble(int index, Card card) {
+
             }
 
             @Override
@@ -114,7 +119,7 @@ public class MainFrame extends JFrame {
             }
 
             @Override
-            public void onShowResult(Game.State state) {
+            public void onShowResult(int index, Game.State state) {
 
             }
 
@@ -127,12 +132,17 @@ public class MainFrame extends JFrame {
             public void showChoiceDialog() {
 
             }
-            
+
             @Override
             public void onShowMessageDialog(String input) {
                 playPanel.showMessageDialog(input);
             }
+
+            @Override
+            public void showTagMessage(int index, int type) {
+
+            }
         });
     }
-    
+
 }

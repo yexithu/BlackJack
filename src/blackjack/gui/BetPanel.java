@@ -28,53 +28,54 @@ import javax.swing.OverlayLayout;
  *
  * @author Re
  */
-public class BetPanel extends JPanel{
-    
+public class BetPanel extends JPanel {
+
     static public ArrayList<Token> tableTokens;
     static Hashtable<Integer, Integer> leftTokensNumber = new Hashtable<>(6);
     static Hashtable<Integer, Token> defaultTokens = new Hashtable<>(6);
-    
+
     static Poker cardGui;
-    
+
     private int totalBetValue = 0;
     private int totalLeftValue = 0;
-    
+
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
-    
+
     private BetFinishedListener betFinishedListener;
+
     public BetPanel() {
         setLayout(null);
         setDefaultToken(this);
         setDefaultCard();
     }
-    
+
     public void paintComponent(Graphics g) {
-        
+
         super.paintComponent(g);
 
         ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
         g.drawImage(backgroundImage.getImage(), 0, 0, this);
-        
-        for(Token tableToken: tableTokens) {
-            if(tableToken != null) {
+
+        for (Token tableToken : tableTokens) {
+            if (tableToken != null) {
                 this.remove(tableToken);
                 this.add(tableToken);
             }
         }
-        
+
         Iterator iterator = defaultTokens.keySet().iterator();
         while (iterator.hasNext()) {
-            Integer next = (Integer)iterator.next();
+            Integer next = (Integer) iterator.next();
             this.remove(defaultTokens.get(next));
             this.add(defaultTokens.get(next));
         }
-        
+
     }
-    
+
     private void setDefaultToken(JPanel thisPanel) {
         tableTokens = new ArrayList<>();
-        
+
         Token token1 = new Token(1, 100, 85);
         Token token5 = new Token(5, 100, 185);
         Token token25 = new Token(25, 100, 285);
@@ -87,20 +88,25 @@ public class BetPanel extends JPanel{
         defaultTokens.put(100, token100);
         defaultTokens.put(500, token500);
         defaultTokens.put(1000, token1000);
-        
+
         Iterator iterator = defaultTokens.keySet().iterator();
         while (iterator.hasNext()) {
-            Integer next = (Integer)iterator.next();
+            Integer next = (Integer) iterator.next();
             Token defaultToken = defaultTokens.get(next);
             thisPanel.add(defaultToken);
             leftTokensNumber.put(defaultToken.parValue, 10);
             defaultToken.setClickedListener(new Token.TokenClickedListener() {
                 @Override
                 public void onTokensClicked(int parValue) {
-                    if(totalBetValue + defaultToken.parValue <= 500)
+                    if (totalBetValue + defaultToken.parValue <= 500) {
                         createBetToken(defaultToken);
-                };
-            });
+                    }
+                }
+            ;
+        }
+    
+
+    );
         }
     }
     
@@ -108,7 +114,7 @@ public class BetPanel extends JPanel{
         cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
         cardGui.isCoverred = false;
         add(cardGui);
-        
+
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
@@ -117,36 +123,37 @@ public class BetPanel extends JPanel{
             }
         });
     }
-    
+
     private void withDrawToken(Token token) {
-        if(tableTokens.get(0) == token) {
+        if (tableTokens.get(0) == token) {
             new Animation.TokenMove(this, new Token(token), defaultTokens.get(token.parValue).centerX, defaultTokens.get(token.parValue).centerY, false);
             this.remove(token);
             tableTokens.remove(0);
             totalBetValue -= token.parValue;
             totalLeftValue += token.parValue;
             leftTokensNumber.replace(token.parValue, leftTokensNumber.get(token.parValue) + 1);
-           
+
         }
     }
+
     private void createBetToken(Token defaultToken) {
         int randomX = 380, randomY = 185;
         Random random = new Random();
         randomX += random.nextInt(36) - 18;
         randomY += random.nextInt(36) - 18;
         Token newToken = new Token(defaultToken);
-        Animation.TokenMove addedToken = new Animation.TokenMove(this,newToken , randomX, randomY, true);
+        Animation.TokenMove addedToken = new Animation.TokenMove(this, newToken, randomX, randomY, true);
         setLeftToken(newToken);
         tableTokens.add(0, addedToken.getToken());
         leftTokensNumber.replace(defaultToken.parValue, (leftTokensNumber.get(defaultToken.parValue) - 1));
         totalBetValue += defaultToken.parValue;
-        
-        if((int)leftTokensNumber.get(defaultToken.parValue) == 0) {
+
+        if ((int) leftTokensNumber.get(defaultToken.parValue) == 0) {
             defaultToken.setVisible(false);
             defaultToken.setEnabled(false);
         }
     }
-    
+
     private void setLeftToken(Token token) {
         token.setClickedListener(new Token.TokenClickedListener() {
 
@@ -156,23 +163,25 @@ public class BetPanel extends JPanel{
             }
         });
     }
+
     private void setLeftValue() {
         this.leftValueLabel.setText(String.valueOf(totalLeftValue));
     }
-    
+
     public void setLeftValue(int value) {
         this.totalLeftValue = value;
         setLeftValue();
     }
-    
+
     private void setBetValue() {
         this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
-    
+
     public interface BetFinishedListener {
+
         void onBetFinished(int bet);
     }
-    
+
     public void setBetFinishedListener(BetFinishedListener listener) {
         this.betFinishedListener = listener;
     }

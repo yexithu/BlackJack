@@ -24,7 +24,7 @@ public class Card implements Cloneable {
             this.index = index;
         }
 
-        @Override   
+        @Override
         public String toString() {
             return Name;
         }
@@ -81,11 +81,11 @@ public class Card implements Cloneable {
     public String toString() {
         return Type + "-" + Value;
     }
-    
+
     public int getTypeIndex() {
         return this.Type.index;
     }
-    
+
     public int getValueIndex() {
         return this.Value.index;
     }

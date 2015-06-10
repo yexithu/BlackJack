@@ -35,7 +35,7 @@ public class PlayPanel extends JPanel {
     private int totalLeftValue = 0;
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
-    
+
     Hashtable<Integer, ArrayList<Poker>> hands;
 
     public PlayPanel() {
@@ -49,22 +49,23 @@ public class PlayPanel extends JPanel {
 
         ImageIcon background = new ImageIcon("res/playBackground.png");
         g.drawImage(background.getImage(), 0, 0, this);
-        
+
         Iterator interator = hands.keySet().iterator();
-        
+
         while (interator.hasNext()) {
-            Integer next =(Integer) interator.next();
+            Integer next = (Integer) interator.next();
             ArrayList<Poker> pokers = hands.get(next);
             for (Poker poker : pokers) {
                 this.remove(poker);
                 this.add(poker);
-                if(pokers.get(0) == poker)
+                if (pokers.get(0) == poker) {
                     poker.isCoverred = false;
-                else
+                } else {
                     poker.isCoverred = true;
-            }           
+                }
+            }
         }
-        
+
         this.remove(cardGui);
         this.add(cardGui);
 
@@ -78,8 +79,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                playerActionListener.onPlayerHit();
-              
+                playerActionListener.onPlayerHit(0);
+
             }
         });
     }
@@ -111,15 +112,15 @@ public class PlayPanel extends JPanel {
 
     public interface PlayerActionListener {
 
-        void onPlayerStand();
+        void onPlayerStand(int index);
 
-        void onPlayerHit();
+        void onPlayerHit(int index);
 
         void onPlayerSpilt();
 
-        void onPlayerSurrand();
+        void onPlayerSurrand(int index);
 
-        void onPlayerDouble();
+        void onPlayerDouble(int index);
 
         void onPlayerTakeInsure();
     }
@@ -152,19 +153,20 @@ public class PlayPanel extends JPanel {
     public void showMessageDialog(String input) {
         JOptionPane.showMessageDialog(null, input, "Hint", JOptionPane.ERROR_MESSAGE);
     }
-    
+
     public void showChoiceDialog() {
         int result = JOptionPane.showConfirmDialog(null, "Take Insurerance?");
-        if(result == JOptionPane.YES_OPTION) {
+        if (result == JOptionPane.YES_OPTION) {
             playerActionListener.onPlayerTakeInsure();
         }
     }
+
     private void setHandPokers() {
         playerDefaultHands = new ArrayList<>();
         bankerHands = new ArrayList<>();
         playerFirstHands = new ArrayList<>();
         playerSecondHands = new ArrayList<>();
-        
+
         hands = new Hashtable<>(4);
         hands.put(0, playerDefaultHands);
         hands.put(1, bankerHands);

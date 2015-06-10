@@ -11,18 +11,16 @@ import blackjack.gui.MainFrame;
  *
  * @author Martin
  */
-public class BlackJack{
+public class BlackJack {
 
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String[] args) {
         // TODO code application logic here
         //g.run();
         MainFrame mainFrame = new MainFrame();
         //mainFrame.setVisible(true);
-        
 
     }
 }

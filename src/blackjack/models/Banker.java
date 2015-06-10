@@ -10,7 +10,7 @@ package blackjack.models;
  * @author Martin
  */
 //庄家的抽象表示
-public class Banker extends Hand{
+public class Banker extends Hand {
 
     @Override
     public void display() {

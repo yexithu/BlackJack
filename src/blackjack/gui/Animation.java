@@ -69,7 +69,7 @@ public class Animation {
             int paveMentY = (endY - token.getY() - Token.radius) / 7;
             for (int i = 0; i < 7; ++i) {
                 token.setLocation(token.getX() + paveMentX, token.getY() + paveMentY);
-                threadSleep( runTime / 10);
+                threadSleep(runTime / 10);
             }
 
             token.centerX = endX;
@@ -134,7 +134,7 @@ public class Animation {
 
                 poker.setCardSize((int) (Poker.width * rate * scaleRate), (int) (Poker.height * scaleRate));
                 poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
-                threadSleep( perFrame);
+                threadSleep(perFrame);
 
             }
 
@@ -184,7 +184,7 @@ public class Animation {
 
                 poker.setCardSize((int) (Poker.width * rate * scaleRate), (int) (Poker.height * scaleRate));
                 poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
-               threadSleep( perFrame);
+                threadSleep(perFrame);
 
             }
 
@@ -196,7 +196,7 @@ public class Animation {
             int pavementY = (endY - poker.getY()) / 10;
             for (int i = 0; i < 10; ++i) {
                 poker.setLocation(poker.getX() + pavementX, poker.getY() + pavementY);
-                threadSleep( perFrame);
+                threadSleep(perFrame);
             }
             poker.setLocation(endX, endY);
         }
@@ -236,7 +236,7 @@ public class Animation {
                 poker.setLocation(afterX, afterY);
                 poker.setCardSize((int) (Poker.width * rate), (int) (Poker.height * rate));
                 //panel.repaint();
-               threadSleep( runTime / 10);
+                threadSleep(runTime / 10);
             }
 
             poker.setCardSize(Poker.width, Poker.height);
@@ -244,7 +244,7 @@ public class Animation {
             int paveMentY = (endY - poker.getY()) / 7;
             for (int i = 0; i < 7; ++i) {
                 poker.setLocation(poker.getX() + paveMentX, poker.getY() + paveMentY);
-                threadSleep( runTime / 10);
+                threadSleep(runTime / 10);
             }
             poker.setLocation(endX, endY);
         }

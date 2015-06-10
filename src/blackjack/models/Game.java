@@ -30,6 +30,7 @@ public class Game {
     private int pool, bet;//pool：赌池，bet：赌注
 
     private GameActionListener gameActionListener;
+
     public Game(String Name) {
         Player = new Player(Name);
         Banker = new Banker();
@@ -111,7 +112,7 @@ public class Game {
 
     public void initial() {
         Card[] cards = new Card[4];
-        for(int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
         Player.deal(cards[0]);
@@ -122,7 +123,7 @@ public class Game {
         Banker.setBJ();
         Banker.displayFirstCard();
         Player.display();
-        
+
         gameActionListener.onInitial(cards);
     }
 
@@ -428,21 +429,32 @@ public class Game {
         System.out.println("Bust!\n");
         Results.set(i, State.BANKER_WIN);
     }
-    
+
     public void setGameActionListener(GameActionListener gameActionListener) {
         this.gameActionListener = gameActionListener;
     }
-    
-    public interface GameActionListener{
+
+    public interface GameActionListener {
+
         void onInitial(Card[] cards);
         /*
-        Index传玩家0或者庄家1玩家手牌1庄家手牌，2玩家分牌第一幅，3玩家分牌第二幅
-        */
+         Index传玩家0或者庄家1玩家手牌1庄家手牌，2玩家分牌第一幅，3玩家分牌第二幅
+         */
+
+        void onDouble(int index, Card card);
+
         void onDeal(int index, Card card);
+
         void onBankerDisplayCard();
-        void onShowResult(State state);
+
+        void onShowResult(int index, State state);
+
         void onBankerPeek();
+
         void showChoiceDialog();
+
         void onShowMessageDialog(String input);
+
+        void showTagMessage(int index, int type);
     }
 }

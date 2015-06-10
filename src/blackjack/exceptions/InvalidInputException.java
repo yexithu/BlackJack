@@ -10,8 +10,9 @@ package blackjack.exceptions;
  * @author Martin
  */
 //自定义错误类型：不合法的输入
-public class InvalidInputException extends Exception{
-    public InvalidInputException(){
+public class InvalidInputException extends Exception {
+
+    public InvalidInputException() {
         super("Error! Invalid Input! Please check and input again.");
     }
 }
