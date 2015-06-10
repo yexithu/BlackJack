@@ -127,6 +127,11 @@ public class MainFrame extends JFrame {
             public void showChoiceDialog() {
 
             }
+            
+            @Override
+            public void onShowMessageDialog(String input) {
+                
+            }
         });
     }
     

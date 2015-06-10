@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -79,6 +80,7 @@ public class PlayPanel extends JPanel {
             public void onCardClicked() {
                 //player-ActionListener.onPlayerHit();
                 playerActionListener.onPlayerHit();
+                JOptionPane.showMessageDialog(null, "在对话框内显示的描述性的文字", "标题条文字串", JOptionPane.ERROR_MESSAGE);
             }
         });
     }

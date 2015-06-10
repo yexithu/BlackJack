@@ -443,5 +443,6 @@ public class Game {
         void onShowResult(State state);
         void onBankerPeek();
         void showChoiceDialog();
+        void onShowMessageDialog(String input);
     }
 }
