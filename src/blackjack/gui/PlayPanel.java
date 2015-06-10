@@ -7,11 +7,13 @@ package blackjack.gui;
 
 import static blackjack.gui.BetPanel.cardGui;
 import blackjack.models.Card;
+import blackjack.models.Game;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,6 +37,7 @@ public class PlayPanel extends JPanel {
     private int totalLeftValue = 0;
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
+    private JButton spiltButton;
 
     Hashtable<Integer, ArrayList<Poker>> hands;
 
@@ -79,18 +82,32 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                playerActionListener.onPlayerHit(0);
-
+                playerActionListener.onPlayerHit();              
             }
         });
     }
 
     void initial(Card[] cards) {
         dealCard(0, cards[0], true);
-        dealCard(1, cards[1], true);
-        dealCard(0, cards[2], true);
-        dealCard(1, cards[3], false);
-
+        int midtime = 200;
+        new Animation.expectantTaskManager(150,new Animation.expectantTaskManager.ExpectantTask() {
+            @Override
+            public void expectantTask() {
+                dealCard(1, cards[1], true);
+            }
+        });
+        new Animation.expectantTaskManager(2 * 150,new Animation.expectantTaskManager.ExpectantTask() {
+            @Override
+            public void expectantTask() {
+                dealCard(0, cards[2], true);
+            }
+        });
+        new Animation.expectantTaskManager(3 * 150,new Animation.expectantTaskManager.ExpectantTask() {
+            @Override
+            public void expectantTask() {
+                dealCard(1, cards[3], false);
+            }
+        });
     }
 
     private void setLeftValue() {
@@ -125,7 +142,7 @@ public class PlayPanel extends JPanel {
         void onPlayerTakeInsure();
     }
 
-    private void dealCard(int index, Card card, boolean toTurn) {
+    public void dealCard(int index, Card card, boolean toTurn) {
         Poker tempPoker = new Poker(Poker.defultX, Poker.defaultY, card, true);
         hands.get(index).add(0, tempPoker);
         dealAnimation(index, tempPoker, toTurn);
@@ -136,7 +153,7 @@ public class PlayPanel extends JPanel {
         if (index == 0) {
             endY = 190;
         } else if (index == 1) {
-            endY = 30;
+            endY = 15;
         } else if (index == 2) {
             endY = 190;
         } else {
@@ -150,13 +167,21 @@ public class PlayPanel extends JPanel {
         }
     }
 
+    public void bankerDisplayCard() {
+        new Animation.PokerTurn(this, hands.get(1).get(0));
+    }
+    
+    public void bankerPeekCard() {
+        new Animation.PokerPeeked(hands.get(1).get(0));
+    }
+    
     public void showMessageDialog(String input) {
-        JOptionPane.showMessageDialog(null, input, "Hint", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, input, "Hint", JOptionPane.ERROR_MESSAGE);
     }
 
     public void showChoiceDialog() {
-        int result = JOptionPane.showConfirmDialog(null, "Take Insurerance?");
-        if (result == JOptionPane.YES_OPTION) {
+        int result = JOptionPane.showConfirmDialog(this, "Take Insurerance?");
+        if(result == JOptionPane.YES_OPTION) {
             playerActionListener.onPlayerTakeInsure();
         }
     }

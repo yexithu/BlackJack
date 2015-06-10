@@ -258,4 +258,100 @@ public class Animation {
         }
 
     }
+    
+    public static class PokerPeeked implements Runnable{
+        
+        static int runTime = 500;
+        static double maxScaleRate = 1.3;
+        public Poker poker;
+
+        public PokerPeeked(Poker poker) {
+            this.poker = poker;
+            new Thread(this).start();
+        }
+        
+        @Override
+        public void run() {
+            int perFrame = runTime / 10;
+            int centerX = poker.getX() + Poker.width / 2;
+            int topX = poker.getX();
+            int topY = poker.getY();
+            
+            double rateLine = 2 * (maxScaleRate - 1) / 10;
+            
+            for(int i = 0; i < 10; ++i) {
+                double scaleRate = maxScaleRate - Math.abs(maxScaleRate - 1 - rateLine * i);
+                int endX = (int)(centerX - Poker.width * scaleRate / 2);
+                int endY =(int) (topY - 3 * Poker.height * (scaleRate - 1)  / 4);
+                
+                poker.setCardSize((int) (Poker.width * scaleRate), (int) (Poker.height * scaleRate));
+                poker.setLocation(endX, endY);
+                threadSleep(perFrame);
+            }
+            
+            poker.setCardSize(Poker.width, Poker.height);
+            poker.setLocation(topX, topY);
+        }
+        
+    }
+    
+    public static class expectantTaskManager implements Runnable{
+        private int time;
+        private ExpectantTask expectantTask;
+        public interface ExpectantTask {
+            void expectantTask();
+        }
+       
+        public expectantTaskManager(int time,ExpectantTask expectantTask) {
+            this.expectantTask = expectantTask;
+            this.time = time;
+            new Thread(this).start();
+        }
+        @Override
+        public void run() {
+            threadSleep(time);
+            expectantTask.expectantTask();
+        }
+    }
+    
+    public static class PokerSpilt implements Runnable{
+        
+        static int offsetX, offsetY;
+        static int runTime = 300;
+        static double maxScaleRate = 1.5;
+        
+        //1 远处 , -1 进出
+        int flag;
+        JPanel panel;
+        Poker poker;
+        public PokerSpilt(JPanel panel, Poker poker, int flag) {
+            this.panel = panel;
+            this.poker = poker;
+            this.flag = flag;
+            
+            new Thread(this).start();
+        }
+
+        @Override
+        public void run() {
+            int offX = offsetX * flag;
+            int offY = offsetY * flag;
+            int endX = poker.getX() + offX;
+            int endY = poker.getY() + offY;
+            
+            int perFrame = runTime / 10;
+            for(int i = 0; i < 10; ++i) {
+                double rate = 1;
+                if(flag == 1) {
+                    rate =1 - ((1 - 1 / maxScaleRate) * i / 10);
+                }
+                else {
+                    rate = 1 + ((maxScaleRate - 1) * i / 10);
+                }
+            }
+            
+        }
+        
+        
+    }
 }

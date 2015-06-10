@@ -110,12 +110,12 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onDeal(int index, Card card) {
-
+                playPanel.dealCard(index, card, true);
             }
 
             @Override
             public void onBankerDisplayCard() {
-
+                playPanel.bankerDisplayCard();
             }
 
             @Override
@@ -125,12 +125,12 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onBankerPeek() {
-
+                playPanel.bankerPeekCard();
             }
 
             @Override
             public void showChoiceDialog() {
-
+                playPanel.showChoiceDialog();
             }
 
             @Override
