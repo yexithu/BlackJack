@@ -80,17 +80,17 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onPlayerSurrand(int index) {
-
+                
             }
 
             @Override
             public void onPlayerDouble(int index) {
-
+                game.playerDouble(index);
             }
 
             @Override
             public void onPlayerTakeInsure() {
-
+                game.playerInsure();
             }
         });
     }

@@ -227,7 +227,7 @@ public class Game {
     public void playerInsure() {
         Player.changeCounter(-pool / 2);
         Player.setInsure(true);
-        System.out.println("Insurance bought!");
+//        System.out.println("Insurance bought!");
     }
 
     public boolean isPlayerDouble() {
@@ -348,11 +348,10 @@ public class Game {
         }
     }
 
-    public void playerDouble(int i) {
+    public void playerDouble(int index) {
         Player.changeCounter(-bet);
         pool += bet;
-        Player.deal(i, Deck.getCard());
-        Player.display(i);
+        gameActionListener.onDouble(index, Deck.getCard());
     }
 
     public void playerSplit() {
