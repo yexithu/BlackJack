@@ -127,6 +127,7 @@ public class Game {
         gameActionListener.onInitial(cards);
         if(Banker.isPeek()){
             gameActionListener.onBankerPeek();
+            gameActionListener.showChoiceDialog();
             if(Banker.isBJ()){
                 gameActionListener.onBankerDisplayCard();
                 if(Player.isBJ()){
@@ -140,7 +141,7 @@ public class Game {
             gameActionListener.showTagMessage(0, 1);
             gameActionListener.onShowResult(0, Result=State.PLAYER_WIN);
         }else{
-            gameActionListener.showChoiceDialog();
+            //设置Choice Listener
         }
     }
 
