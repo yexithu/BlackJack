@@ -82,7 +82,7 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                playerActionListener.onPlayerHit();              
+                playerActionListener.onPlayerHit(0);              
             }
         });
     }
@@ -180,6 +180,7 @@ public class PlayPanel extends JPanel {
     }
 
     public void showChoiceDialog() {
+
         int result = JOptionPane.showConfirmDialog(this, "Take Insurerance?");
         if(result == JOptionPane.YES_OPTION) {
             playerActionListener.onPlayerTakeInsure();
