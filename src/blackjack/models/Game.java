@@ -125,6 +125,23 @@ public class Game {
         Player.display();
 
         gameActionListener.onInitial(cards);
+        if(Banker.isPeek()){
+            gameActionListener.onBankerPeek();
+            if(Banker.isBJ()){
+                gameActionListener.onBankerDisplayCard();
+                if(Player.isBJ()){
+                    gameActionListener.onShowResult(0, Result=State.PUSH);
+                }else{
+                    gameActionListener.showTagMessage(1, 1);
+                    gameActionListener.onShowResult(0, Result=State.BANKER_WIN);
+                }
+            }
+        }else if(Player.isBJ()){
+            gameActionListener.showTagMessage(0, 1);
+            gameActionListener.onShowResult(0, Result=State.PLAYER_WIN);
+        }else{
+            gameActionListener.showChoiceDialog();
+        }
     }
 
     private void bankerAct() {
