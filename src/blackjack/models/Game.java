@@ -277,11 +277,18 @@ public class Game {
         }
     }
 
+    public void playerHit(int index) {
+        gameActionListener.onDeal(index, Deck.getCard());
+        playerBustControl(index);
+    }
+
     public void playerSurrend(int index) {
         Player.setSurrenders(index, true);
         Results.set(index, State.BANKER_WIN);
         if (index == 1) {
-            gameActionListener.onChangeSet();
+            Card c = Deck.getCard();
+            Player.deal(2, c);
+            gameActionListener.onChangeSet(c);
         } else {
             gameActionListener.onShowResult(index, State.BANKER_WIN);
         }
@@ -290,7 +297,9 @@ public class Game {
     public void playerStand(int index) {
         if (Player.isSplit()) {
             if (index == 1) {
-                gameActionListener.onChangeSet();
+                Card c = Deck.getCard();
+                Player.deal(2, c);
+                gameActionListener.onChangeSet(c);
             } else {
                 bankerAct();
                 Results.set(index, compare(index));
@@ -388,17 +397,31 @@ public class Game {
     public void playerDouble(int index) {
         Player.changeCounter(-bet);
         pool += bet;
-        gameActionListener.onDouble(index, Deck.getCard());
-        Player.deal(Deck.getCard());
-        if (Player.isBust()) {
+        Card c = Deck.getCard();
+        gameActionListener.onDouble(index, c);
+        Player.deal(index, c);
+        playerBustControl(index);
+    }
+
+    private void playerBustControl(int index) {
+        if (Player.isBust(index)) {
             gameActionListener.showTagMessage(0, 0);
             Results.set(index, State.BANKER_WIN);
             if (index == 1) {
-                gameActionListener.onChangeSet();
+                Card c = Deck.getCard();
+                Player.deal(2, c);
+                gameActionListener.onChangeSet(c);
             } else {
                 gameActionListener.onShowResult(index, Results.get(index));
             }
         }
+    }
+
+    public void split() {
+        Player.split();
+        Card c = Deck.getCard();
+        Player.deal(1, c);
+        gameActionListener.onDeal(1, c);
     }
 
     public void playerSplit() {
@@ -522,6 +545,6 @@ public class Game {
 
         void showTagMessage(int index, int type);
 
-        void onChangeSet();
+        void onChangeSet(Card c);
     }
 }

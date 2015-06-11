@@ -55,6 +55,13 @@ public class Hands {
         deal(i + 1, c2);//在第i+1副手牌中发一张新牌
     }
 
+    public void split() {
+        HandArray.add(new Hand());
+        HandArray.add(new Hand());
+        deal(1, HandArray.get(0).getCard(0));
+        deal(2, HandArray.get(0).getCard(1));
+    }
+
     public int getHandNum() {
         return HandArray.size();
     }

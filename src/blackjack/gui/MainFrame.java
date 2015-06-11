@@ -65,17 +65,17 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onPlayerStand(int index) {
-
+                game.playerStand(index);
             }
 
             @Override
             public void onPlayerHit(int index) {
-
+                game.playerHit(index);
             }
 
             @Override
             public void onPlayerSpilt() {
-
+                game.split();
             }
 
             @Override
@@ -144,8 +144,8 @@ public class MainFrame extends JFrame {
             }//index 0Player 1Banker type 0Bust 1BJ
 
             @Override
-            public void onChangeSet() {
-
+            public void onChangeSet(Card c) {
+                
             }
         });
     }

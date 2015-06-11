@@ -14,7 +14,7 @@ import java.util.ArrayList;
 //一副手牌的抽象表示
 public class Hand implements Cloneable {
 
-    private final ArrayList<Card> Cards;//用Card对象的ArrayList表示牌堆
+    private final ArrayList<Card> Cards;//用Card对象的ArrayList表示手牌
     private boolean Soft = false, BJ = false;//Soft:手牌点数是否为软点 BJ：手牌是否是BlackJack
 
     public Hand() {
@@ -58,6 +58,10 @@ public class Hand implements Cloneable {
     //获得第一张手牌的点数
     public int getFirstCard() {
         return Cards.get(0).Value.Value;
+    }
+
+    public Card getCard(int index) {
+        return Cards.get(index);
     }
 
     //发手牌
