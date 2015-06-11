@@ -100,7 +100,7 @@ public class PlayPanel extends JPanel {
         new Animation.expectantTaskManager(midtime,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
-                dealCard(1, cards[1], true);
+                dealCard(3, cards[1], true);
             }
         });
         new Animation.expectantTaskManager(midtime * 2,new Animation.expectantTaskManager.ExpectantTask() {
@@ -112,7 +112,7 @@ public class PlayPanel extends JPanel {
         new Animation.expectantTaskManager(midtime * 3,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
-                dealCard(1, cards[3], false);
+                dealCard(3, cards[3], false);
                 if(cards[0].getValue() == cards[2].getValue()) {
                     changeSplitButtonState();
                 }
@@ -258,9 +258,9 @@ public class PlayPanel extends JPanel {
 
         hands = new Hashtable<>(4);
         hands.put(0, playerDefaultHands);
-        hands.put(1, bankerHands);
-        hands.put(2, playerFirstHands);
-        hands.put(3, playerSecondHands);
+        hands.put(1, playerFirstHands);
+        hands.put(2, playerSecondHands);
+        hands.put(3, bankerHands);
     }
     
     private Poker.CardClickedListener getDealedCardListener(int index) {
@@ -293,24 +293,13 @@ public class PlayPanel extends JPanel {
     
     public void setChanged() {
         
-        if(currenSet == 1){
-            currenSet = 2;
-            for(Poker poker: hands.get(2)) {
-                new Animation.PokerSpilt(this, poker, 1);
-            }
-            for(Poker poker: hands.get(3)) {
-                new Animation.PokerSpilt(this, poker, -1);
-            }
-        }
-        else {
-            currenSet = 1;
-            for(Poker poker: hands.get(3)) {
+            currenSet = 3 - currenSet;
+            for(Poker poker: hands.get(3 - currenSet)) {
                 new Animation.PokerSpilt(this, poker, 1);
             }
             for(Poker poker: hands.get(2)) {
                 new Animation.PokerSpilt(this, poker, -1);
             }
-        }
     }
     
     private void setMessageTags() {
