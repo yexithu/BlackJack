@@ -163,16 +163,9 @@ public class PlayPanel extends JPanel {
     }
 
     public void dealAnimation(int index, Poker poker, boolean toTurn) {
-        int endX = 0, endY = 0;
-        if (index == 0) {
-            endY = 190;
-        } else if (index == 1) {
+        int endX = 0, endY = 190;
+        if(index == 3)
             endY = 15;
-        } else if (index == 2) {
-            endY = 190;
-        } else {
-            endY = 190;
-        }
         endX = (hands.get(index).size() - 1) * 25 + 5;
         if (toTurn) {
             Animation.PokerTurnMove pokerTurnMove = new Animation.PokerTurnMove(this, poker, endX, endY);
@@ -182,11 +175,11 @@ public class PlayPanel extends JPanel {
     }
 
     public void bankerDisplayCard() {
-        new Animation.PokerTurn(this, hands.get(1).get(0));
+        new Animation.PokerTurn(this, hands.get(3).get(0));
     }
     
     public void bankerPeekCard() {
-        new Animation.PokerPeeked(hands.get(1).get(0));
+        new Animation.PokerPeeked(hands.get(3).get(0));
     }
     
     public void showMessageDialog(String input) {
@@ -245,8 +238,8 @@ public class PlayPanel extends JPanel {
     private void playerSplit() {
         changeSplitButtonState();
         currenSet = 1;
-        hands.get(2).add(hands.get(0).get(1));
-        hands.get(3).add(hands.get(0).get(0));
+        hands.get(1).add(hands.get(0).get(1));
+        hands.get(2).add(hands.get(0).get(0));
         
         new Animation.PokerSpilt(this, hands.get(3).get(0), 1);
     }
