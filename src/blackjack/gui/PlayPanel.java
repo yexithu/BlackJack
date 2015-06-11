@@ -30,6 +30,7 @@ public class PlayPanel extends JPanel {
     private ArrayList<Poker> bankerHands;
     private ArrayList<Poker> playerFirstHands;
     private ArrayList<Poker> playerSecondHands;
+    private ArrayList<JLabel> messageTags;
 
     private PlayerActionListener playerActionListener;
     private boolean isSpilt;
@@ -49,6 +50,7 @@ public class PlayPanel extends JPanel {
         setHandPokers();
         setDefaultCard();
         setSplitButton();
+        setMessageTags();
     }
 
     public void paintComponent(Graphics g) {
@@ -57,6 +59,10 @@ public class PlayPanel extends JPanel {
         ImageIcon background = new ImageIcon("res/playBackground.png");
         g.drawImage(background.getImage(), 0, 0, this);
 
+        for(JLabel tagLabel : messageTags) {
+            this.remove(tagLabel);
+            this.add(tagLabel);
+        }
         Iterator interator = hands.keySet().iterator();
 
         while (interator.hasNext()) {
@@ -87,7 +93,6 @@ public class PlayPanel extends JPanel {
             @Override
             public void onCardClicked() {
                 playerActionListener.onPlayerHit(0);            
-                pokerSetBack();
             }
         });
     }
@@ -216,7 +221,6 @@ public class PlayPanel extends JPanel {
         add(spiltButton);
         spiltButton.setVisible(false);
         spiltButton.setEnabled(false);
-        changeSplitButtonState();
     }
     
     void changeSplitButtonState() {
@@ -258,6 +262,41 @@ public class PlayPanel extends JPanel {
                 }
             };
         }
-            
+    }
+    
+    public void showTageMessage(int index, int type) {
+        JLabel  tag = messageTags.get(index * 2 + type);
+        tag.setVisible(true);
+        tag.setEnabled(true);
+    }
+    
+    private void setMessageTags() {
+        messageTags = new ArrayList<>(4);
+        ImageIcon imageBust = new ImageIcon("res/Bust.png");
+        ImageIcon imageBj = new ImageIcon("res/BlackJack.png");
+        
+        JLabel playerBust = new JLabel(imageBust);
+        playerBust.setSize(100, 50);
+        playerBust.setLocation(90, 250);        
+        JLabel playerBj = new JLabel(imageBj);
+        playerBj.setSize(150, 50);
+        playerBj.setLocation(240, 270);
+        JLabel bankerBust = new JLabel(imageBust);
+        bankerBust.setSize(100, 50);
+        bankerBust.setLocation(90, 60);
+        JLabel bankerBj = new JLabel(imageBj);
+        bankerBj.setSize(150, 50);
+        bankerBj.setLocation(240, 20);
+        
+        messageTags.add(playerBust);
+        messageTags.add(playerBj);
+        messageTags.add(bankerBust);
+        messageTags.add(bankerBj);
+        
+        for(JLabel label: messageTags) {
+            label.setVisible(false);
+            label.setEnabled(false);
+        }
+
     }
 }

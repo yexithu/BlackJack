@@ -140,7 +140,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void showTagMessage(int index, int type) {
-
+                playPanel.showTageMessage(index, type);
             }//index 0Player 1Banker type 0Bust 1BJ
 
             @Override
