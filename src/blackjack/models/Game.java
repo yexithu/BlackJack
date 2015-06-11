@@ -310,8 +310,10 @@ public class Game {
             gameActionListener.onChangeSet(c);
         } else {
             bankerAct();
-            Results.set(index, compare(index));
-            gameActionListener.onShowResult(index, Results.get(index));
+            if (Results.get(index) == State.NULL) {
+                Results.set(index, compare(index));
+                gameActionListener.onShowResult(index, Results.get(index));
+            }
         }
     }
 
@@ -415,8 +417,10 @@ public class Game {
                 gameActionListener.onChangeSet(c);
             } else {
                 bankerAct();
-                Results.set(index, compare(index));
-                gameActionListener.onShowResult(index, Results.get(index));
+                if (Results.get(index) == State.NULL) {
+                    Results.set(index, compare(index));
+                    gameActionListener.onShowResult(index, Results.get(index));
+                }
             }
         }
     }
