@@ -89,9 +89,7 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                System.out.println("Current  " + currenSet);
-                //playerActionListener.onPlayerHit(currenSet);       
-                setChanged();
+                playerActionListener.onPlayerHit(currenSet);       
             }
         });
     }
@@ -157,6 +155,7 @@ public class PlayPanel extends JPanel {
     }
 
     public void dealCard(int index, Card card, boolean toTurn) {
+        System.out.println("DealIndex"+ index);
         Poker tempPoker = new Poker(Poker.defultX, Poker.defaultY, card, true);
         tempPoker.setClickedListener(getDealedCardListener(index));
         hands.get(index).add(0, tempPoker);
@@ -279,6 +278,7 @@ public class PlayPanel extends JPanel {
 
                 @Override
                 public void onCardClicked() {
+                    System.out.println("PlayerClicked");
                     playerActionListener.onPlayerStand(currenSet);
                 }
             };

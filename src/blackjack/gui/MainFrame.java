@@ -37,7 +37,8 @@ public class MainFrame extends JFrame {
 
     private void setBetPanel() {
         betPanel = new BetPanel();
-
+        add(betPanel);
+        paintComponents(getGraphics());
         betPanel.setBetFinishedListener(new BetPanel.BetFinishedListener() {
             @Override
             public void onBetFinished(int betNum) {
@@ -53,7 +54,7 @@ public class MainFrame extends JFrame {
             }
         });
 
-        add(betPanel);
+        
     }
 
     private void setPlayPanel() {
@@ -65,6 +66,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onPlayerStand(int index) {
+                System.out.println("PlayerStand");
                 game.playerStand(index);
             }
 
@@ -95,7 +97,9 @@ public class MainFrame extends JFrame {
             
             @Override 
             public void onGameOver() {
-                
+                remove(playPanel);
+                repaint();
+                setBetPanel();
             }
         });
     }
