@@ -152,7 +152,7 @@ public class MainFrame extends JFrame {
             }//index 0Player 1Banker type 0Bust 1BJ
 
             @Override
-            public void onChangeSet() {
+            public void onChangeSet(Card c) {
                 playPanel.setChanged();
             }
         });
