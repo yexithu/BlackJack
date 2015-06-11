@@ -53,6 +53,7 @@ public class PlayPanel extends JPanel {
         setMessageTags();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -71,11 +72,7 @@ public class PlayPanel extends JPanel {
             for (Poker poker : pokers) {
                 this.remove(poker);
                 this.add(poker);
-                if (pokers.get(0) == poker) {
-                    poker.isCoverred = false;
-                } else {
-                    poker.isCoverred = true;
-                }
+                poker.isCoverred = pokers.get(0) != poker;
             }
         }
 

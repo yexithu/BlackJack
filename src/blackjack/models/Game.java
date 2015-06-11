@@ -37,7 +37,7 @@ public class Game {
         Banker = new Banker();
         Setting = blackjack.models.Setting.example();
         Deck = new Deck(Setting.getDeckNum());
-
+        Results = new ArrayList();
         Deck.shuffle();//第一次运行前先洗牌
     }
 
@@ -124,6 +124,8 @@ public class Game {
         Banker.setBJ();
         Banker.displayFirstCard();
         Player.display();
+        Results.clear();
+        Results.add(State.NULL);
 
         gameActionListener.onInitial(cards);
         new Animation.expectantTaskManager(1500, new Animation.expectantTaskManager.ExpectantTask() {
@@ -155,19 +157,29 @@ public class Game {
     }
 
     private void bankerAct() {
-        Banker.display();
+        gameActionListener.onBankerDisplayCard();
         while (!Banker.isBust() && Banker.continueHit()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 //生吞了啊啊啊！
             }
-            Banker.deal(Deck.getCard());
-            Banker.display();
+            Card c = Deck.getCard();
+            Banker.deal(c);
+            gameActionListener.onDeal(1, c);
         }
         if (Banker.isBust()) {
-            System.out.println("Bust!\n");
-            Result = State.PLAYER_WIN;
+            if (Player.getHandNum() == 1) {
+                Results.set(0, State.PLAYER_WIN);
+                gameActionListener.onShowResult(0, State.PLAYER_WIN);
+            } else {
+                for (int i = 1; i < 3; i++) {
+                    if (Results.get(i) == State.NULL) {
+                        Results.set(i, compare(i));
+                        gameActionListener.onShowResult(i, Results.get(i));
+                    }
+                }
+            }
         }
     }
 
@@ -284,7 +296,9 @@ public class Game {
     }
 
     public void playerHit(int index) {
-        gameActionListener.onDeal(index, Deck.getCard());
+        Card c = Deck.getCard();
+        Player.deal(index, c);
+        gameActionListener.onDeal(index, c);
         playerBustControl(index);
     }
 
@@ -407,6 +421,17 @@ public class Game {
         gameActionListener.onDouble(index, c);
         Player.deal(index, c);
         playerBustControl(index);
+        if (Results.get(index) == State.NULL) {
+            if (index == 1) {
+                c = Deck.getCard();
+                Player.deal(2, c);
+                gameActionListener.onChangeSet(c);
+            } else {
+                bankerAct();
+                Results.set(index, compare(index));
+                gameActionListener.onShowResult(index, Results.get(index));
+            }
+        }
     }
 
     private void playerBustControl(int index) {
@@ -424,10 +449,12 @@ public class Game {
     }
 
     public void split() {
+        Results.add(State.NULL);
+        Results.add(State.NULL);
         Player.split();
         Card c = Deck.getCard();
         Player.deal(1, c);
-        gameActionListener.onDeal(1, c);
+        gameActionListener.onDeal(0, c);
     }
 
     public void playerSplit() {
