@@ -92,8 +92,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
+                System.out.println("Current  " + currenSet);
                 playerActionListener.onPlayerHit(currenSet);       
-                setChanged();
             }
         });
     }
@@ -206,8 +206,14 @@ public class PlayPanel extends JPanel {
     
     public void showResultDialog(int index , Game.State state) {
        JOptionPane.showMessageDialog(this, String.valueOf(state), "Hint", JOptionPane.PLAIN_MESSAGE);
-       if(index == 0 || index == 2) {
+       if(index == 0 || index == 1) {
            playerActionListener.onGameOver();
+       } else {
+           for(JLabel tagLabel:messageTags) {
+               tagLabel.setVisible(false);
+               tagLabel.setEnabled(false);
+           }
+           setChanged();
        }
     }
     public void pokerSetBack() {
@@ -288,12 +294,24 @@ public class PlayPanel extends JPanel {
     }
     
     public void setChanged() {
-        currenSet = 2;
-        for(Poker poker: hands.get(2)) {
-            new Animation.PokerSpilt(this, poker, 1);
+        
+        if(currenSet == 1){
+            currenSet = 2;
+            for(Poker poker: hands.get(2)) {
+                new Animation.PokerSpilt(this, poker, 1);
+            }
+            for(Poker poker: hands.get(3)) {
+                new Animation.PokerSpilt(this, poker, -1);
+            }
         }
-        for(Poker poker: hands.get(3)) {
-            new Animation.PokerSpilt(this, poker, -1);
+        else {
+            currenSet = 1;
+            for(Poker poker: hands.get(3)) {
+                new Animation.PokerSpilt(this, poker, 1);
+            }
+            for(Poker poker: hands.get(2)) {
+                new Animation.PokerSpilt(this, poker, -1);
+            }
         }
     }
     

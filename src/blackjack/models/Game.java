@@ -116,8 +116,6 @@ public class Game {
         for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
-        cards[0] = new Card(Card.Pattern.DIAMOND, Card.Figure.ACE);
-        cards[2] = new Card(Card.Pattern.DIAMOND, Card.Figure.ACE);
         Player.deal(cards[0]);
         Banker.deal(cards[1]);
         Player.deal(cards[2]);
