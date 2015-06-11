@@ -85,12 +85,13 @@ public class PlayPanel extends JPanel {
         cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
         cardGui.isCoverred = false;
         add(cardGui);
-
+        
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
                 System.out.println("Current  " + currenSet);
-                playerActionListener.onPlayerHit(currenSet);       
+                //playerActionListener.onPlayerHit(currenSet);       
+                setChanged();
             }
         });
     }
