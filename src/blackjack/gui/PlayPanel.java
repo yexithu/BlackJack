@@ -9,6 +9,8 @@ import static blackjack.gui.BetPanel.cardGui;
 import blackjack.models.Card;
 import blackjack.models.Game;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -39,12 +41,14 @@ public class PlayPanel extends JPanel {
     private JLabel leftValueLabel;
     private JButton spiltButton;
 
+    private int pokerIndex = 0;
     Hashtable<Integer, ArrayList<Poker>> hands;
 
     public PlayPanel() {
         setLayout(null);
         setHandPokers();
         setDefaultCard();
+        setSplitButton();
     }
 
     public void paintComponent(Graphics g) {
@@ -82,7 +86,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                playerActionListener.onPlayerHit(0);              
+                playerActionListener.onPlayerHit(0);            
+                pokerSetBack();
             }
         });
     }
@@ -144,6 +149,7 @@ public class PlayPanel extends JPanel {
 
     public void dealCard(int index, Card card, boolean toTurn) {
         Poker tempPoker = new Poker(Poker.defultX, Poker.defaultY, card, true);
+        tempPoker.setClickedListener(getDealedCardListener(index));
         hands.get(index).add(0, tempPoker);
         dealAnimation(index, tempPoker, toTurn);
     }
@@ -186,7 +192,40 @@ public class PlayPanel extends JPanel {
             playerActionListener.onPlayerTakeInsure();
         }
     }
+    
+    public void pokerSetBack() {
+        
+        new Animation.PokerSpilt(this, hands.get(0).get(0), 1);
+    }
+    
+    public void setSplitButton() {
+        spiltButton = new JButton();
+        spiltButton.setSize(60, 35);
+        spiltButton.setLocation(150, 200);
+        spiltButton.setText("Split");
+        spiltButton.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e); //To change body of generated methods, choose Tools | Templates.
+                playerSplit();
+                playerActionListener.onPlayerSpilt();               
+            }
+            
+        });
+        add(spiltButton);
+        spiltButton.setVisible(false);
+        spiltButton.setEnabled(false);
+        changeSplitButtonState();
+    }
+    
+    void changeSplitButtonState() {
+        spiltButton.setEnabled(!spiltButton.isEnabled());
+        spiltButton.setVisible(!spiltButton.isVisible());
+    }
+    private void playerSplit() {
+        
+    }
     private void setHandPokers() {
         playerDefaultHands = new ArrayList<>();
         bankerHands = new ArrayList<>();
@@ -198,5 +237,27 @@ public class PlayPanel extends JPanel {
         hands.put(1, bankerHands);
         hands.put(2, playerFirstHands);
         hands.put(3, playerSecondHands);
+    }
+    
+    private Poker.CardClickedListener getDealedCardListener(int index) {
+        if(index == 1) {
+            return new Poker.CardClickedListener() {
+
+                @Override
+                public void onCardClicked() {
+                    playerActionListener.onPlayerStand(currenSet);
+                }
+            };
+        }
+        else {
+            return new Poker.CardClickedListener() {
+
+                @Override
+                public void onCardClicked() {
+                    playerActionListener.onPlayerHit(currenSet);
+                }
+            };
+        }
+            
     }
 }
