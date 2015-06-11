@@ -92,6 +92,11 @@ public class MainFrame extends JFrame {
             public void onPlayerTakeInsure() {
                 game.playerInsure();
             }
+            
+            @Override 
+            public void onGameOver() {
+                
+            }
         });
     }
 

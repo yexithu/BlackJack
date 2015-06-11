@@ -150,6 +150,8 @@ public class PlayPanel extends JPanel {
         void onPlayerDouble(int index);
 
         void onPlayerTakeInsure();
+        
+        void onGameOver();
     }
 
     public void dealCard(int index, Card card, boolean toTurn) {
@@ -198,6 +200,12 @@ public class PlayPanel extends JPanel {
         }
     }
     
+    public void showResultDialog(int index , Game.State state) {
+       JOptionPane.showMessageDialog(this, String.valueOf(state), "Hint", JOptionPane.ERROR_MESSAGE);
+       if(index == 0 || index == 2) {
+           playerActionListener.onGameOver();
+       }
+    }
     public void pokerSetBack() {
         
         new Animation.PokerSpilt(this, hands.get(0).get(0), 1);
