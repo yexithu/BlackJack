@@ -316,7 +316,7 @@ public class Animation {
     
     public static class PokerSpilt implements Runnable{
         
-        static int offsetX, offsetY;
+        static int offsetX = 300, offsetY = -50;
         static int runTime = 300;
         static double maxScaleRate = 1.5;
         
@@ -346,12 +346,14 @@ public class Animation {
                     rate =1 - ((1 - 1 / maxScaleRate) * i / 10);
                 }
                 else {
-                    rate = 1 + ((maxScaleRate - 1) * i / 10);
+                    rate = (1 + ((maxScaleRate - 1) * i / 10)) / maxScaleRate;
                 }
-            }
-            
-        }
-        
-        
+                
+                poker.setLocation(poker.getX() + offX / 10, poker.getY() + offY / 10);
+                poker.setCardSize((int)(Poker.width * rate) ,(int)( Poker.height * rate));
+                threadSleep(perFrame);
+            }            
+            poker.setLocation(endX, endY);
+        }        
     }
 }

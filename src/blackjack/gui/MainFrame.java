@@ -92,6 +92,11 @@ public class MainFrame extends JFrame {
             public void onPlayerTakeInsure() {
                 game.playerInsure();
             }
+            
+            @Override 
+            public void onGameOver() {
+                
+            }
         });
     }
 
@@ -105,7 +110,10 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onDouble(int index, Card card) {
-
+                if(index == 0)
+                    playPanel.dealCard(index, card, true);
+                else
+                    playPanel.dealCard(index + 1, card, true);
             }
 
             @Override
@@ -120,7 +128,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onShowResult(int index, Game.State state) {
-
+                playPanel.showResultDialog(index, state);
             }
 
             @Override
@@ -140,12 +148,12 @@ public class MainFrame extends JFrame {
 
             @Override
             public void showTagMessage(int index, int type) {
-
+                playPanel.showTageMessage(index, type);
             }//index 0Player 1Banker type 0Bust 1BJ
 
             @Override
-            public void onChangeSet(Card c) {
-                
+            public void onChangeSet() {
+                playPanel.setChanged();
             }
         });
     }

@@ -6,6 +6,7 @@
 package blackjack.gui;
 
 import blackjack.models.Card;
+import blackjack.models.Game;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -102,11 +103,7 @@ public class BetPanel extends JPanel {
                         createBetToken(defaultToken);
                     }
                 }
-            ;
-        }
-    
-
-    );
+            });
         }
     }
     

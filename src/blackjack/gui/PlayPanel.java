@@ -9,6 +9,8 @@ import static blackjack.gui.BetPanel.cardGui;
 import blackjack.models.Card;
 import blackjack.models.Game;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -28,6 +30,7 @@ public class PlayPanel extends JPanel {
     private ArrayList<Poker> bankerHands;
     private ArrayList<Poker> playerFirstHands;
     private ArrayList<Poker> playerSecondHands;
+    private ArrayList<JLabel> messageTags;
 
     private PlayerActionListener playerActionListener;
     private boolean isSpilt;
@@ -39,12 +42,15 @@ public class PlayPanel extends JPanel {
     private JLabel leftValueLabel;
     private JButton spiltButton;
 
+    private int pokerIndex = 0;
     Hashtable<Integer, ArrayList<Poker>> hands;
 
     public PlayPanel() {
         setLayout(null);
         setHandPokers();
         setDefaultCard();
+        setSplitButton();
+        setMessageTags();
     }
 
     public void paintComponent(Graphics g) {
@@ -53,6 +59,10 @@ public class PlayPanel extends JPanel {
         ImageIcon background = new ImageIcon("res/playBackground.png");
         g.drawImage(background.getImage(), 0, 0, this);
 
+        for(JLabel tagLabel : messageTags) {
+            this.remove(tagLabel);
+            this.add(tagLabel);
+        }
         Iterator interator = hands.keySet().iterator();
 
         while (interator.hasNext()) {
@@ -82,7 +92,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                playerActionListener.onPlayerHit(0);              
+                playerActionListener.onPlayerHit(currenSet);       
+                setChanged();
             }
         });
     }
@@ -90,22 +101,25 @@ public class PlayPanel extends JPanel {
     void initial(Card[] cards) {
         dealCard(0, cards[0], true);
         int midtime = 200;
-        new Animation.expectantTaskManager(150,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(midtime,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 dealCard(1, cards[1], true);
             }
         });
-        new Animation.expectantTaskManager(2 * 150,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(midtime * 2,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 dealCard(0, cards[2], true);
             }
         });
-        new Animation.expectantTaskManager(3 * 150,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(midtime * 3,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 dealCard(1, cards[3], false);
+                if(cards[0].getValue() == cards[2].getValue()) {
+                    changeSplitButtonState();
+                }
             }
         });
     }
@@ -140,10 +154,13 @@ public class PlayPanel extends JPanel {
         void onPlayerDouble(int index);
 
         void onPlayerTakeInsure();
+        
+        void onGameOver();
     }
 
     public void dealCard(int index, Card card, boolean toTurn) {
         Poker tempPoker = new Poker(Poker.defultX, Poker.defaultY, card, true);
+        tempPoker.setClickedListener(getDealedCardListener(index));
         hands.get(index).add(0, tempPoker);
         dealAnimation(index, tempPoker, toTurn);
     }
@@ -176,7 +193,7 @@ public class PlayPanel extends JPanel {
     }
     
     public void showMessageDialog(String input) {
-        JOptionPane.showMessageDialog(this, input, "Hint", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, input, "Hint", JOptionPane.QUESTION_MESSAGE);
     }
 
     public void showChoiceDialog() {
@@ -186,7 +203,50 @@ public class PlayPanel extends JPanel {
             playerActionListener.onPlayerTakeInsure();
         }
     }
+    
+    public void showResultDialog(int index , Game.State state) {
+       JOptionPane.showMessageDialog(this, String.valueOf(state), "Hint", JOptionPane.PLAIN_MESSAGE);
+       if(index == 0 || index == 2) {
+           playerActionListener.onGameOver();
+       }
+    }
+    public void pokerSetBack() {
+        
+        new Animation.PokerSpilt(this, hands.get(0).get(0), 1);
+    }
+    
+    public void setSplitButton() {
+        spiltButton = new JButton();
+        spiltButton.setSize(60, 35);
+        spiltButton.setLocation(150, 200);
+        spiltButton.setText("Split");
+        spiltButton.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e); //To change body of generated methods, choose Tools | Templates.
+                playerSplit();
+                playerActionListener.onPlayerSpilt();               
+            }
+            
+        });
+        add(spiltButton);
+        spiltButton.setVisible(false);
+        spiltButton.setEnabled(false);
+    }
+    
+    void changeSplitButtonState() {
+        spiltButton.setEnabled(!spiltButton.isEnabled());
+        spiltButton.setVisible(!spiltButton.isVisible());
+    }
+    private void playerSplit() {
+        changeSplitButtonState();
+        currenSet = 1;
+        hands.get(2).add(hands.get(0).get(1));
+        hands.get(3).add(hands.get(0).get(0));
+        
+        new Animation.PokerSpilt(this, hands.get(3).get(0), 1);
+    }
     private void setHandPokers() {
         playerDefaultHands = new ArrayList<>();
         bankerHands = new ArrayList<>();
@@ -198,5 +258,72 @@ public class PlayPanel extends JPanel {
         hands.put(1, bankerHands);
         hands.put(2, playerFirstHands);
         hands.put(3, playerSecondHands);
+    }
+    
+    private Poker.CardClickedListener getDealedCardListener(int index) {
+        if(index == 1) {
+            return new Poker.CardClickedListener() {
+
+                @Override
+                public void onCardClicked() {
+                    playerActionListener.onPlayerDouble(currenSet);
+                }
+            };
+        }
+        else {
+            return new Poker.CardClickedListener() {
+
+                @Override
+                public void onCardClicked() {
+                    playerActionListener.onPlayerStand(currenSet);
+                }
+            };
+        }
+    }
+    
+    public void showTageMessage(int index, int type) {
+        JLabel  tag = messageTags.get(index * 2 + type);
+        tag.setVisible(true);
+        tag.setEnabled(true);
+    }
+    
+    public void setChanged() {
+        currenSet = 2;
+        for(Poker poker: hands.get(2)) {
+            new Animation.PokerSpilt(this, poker, 1);
+        }
+        for(Poker poker: hands.get(3)) {
+            new Animation.PokerSpilt(this, poker, -1);
+        }
+    }
+    
+    private void setMessageTags() {
+        messageTags = new ArrayList<>(4);
+        ImageIcon imageBust = new ImageIcon("res/Bust.png");
+        ImageIcon imageBj = new ImageIcon("res/BlackJack.png");
+        
+        JLabel playerBust = new JLabel(imageBust);
+        playerBust.setSize(100, 50);
+        playerBust.setLocation(90, 250);        
+        JLabel playerBj = new JLabel(imageBj);
+        playerBj.setSize(150, 50);
+        playerBj.setLocation(240, 270);
+        JLabel bankerBust = new JLabel(imageBust);
+        bankerBust.setSize(100, 50);
+        bankerBust.setLocation(90, 60);
+        JLabel bankerBj = new JLabel(imageBj);
+        bankerBj.setSize(150, 50);
+        bankerBj.setLocation(240, 20);
+        
+        messageTags.add(playerBust);
+        messageTags.add(playerBj);
+        messageTags.add(bankerBust);
+        messageTags.add(bankerBj);
+        
+        for(JLabel label: messageTags) {
+            label.setVisible(false);
+            label.setEnabled(false);
+        }
+
     }
 }
