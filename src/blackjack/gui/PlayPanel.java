@@ -92,7 +92,8 @@ public class PlayPanel extends JPanel {
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
-                playerActionListener.onPlayerHit(0);            
+                playerActionListener.onPlayerHit(currenSet);       
+                setChanged();
             }
         });
     }
@@ -100,22 +101,25 @@ public class PlayPanel extends JPanel {
     void initial(Card[] cards) {
         dealCard(0, cards[0], true);
         int midtime = 200;
-        new Animation.expectantTaskManager(150,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(midtime,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 dealCard(1, cards[1], true);
             }
         });
-        new Animation.expectantTaskManager(2 * 150,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(midtime * 2,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 dealCard(0, cards[2], true);
             }
         });
-        new Animation.expectantTaskManager(3 * 150,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(midtime * 3,new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 dealCard(1, cards[3], false);
+                if(cards[0].getValue() == cards[2].getValue()) {
+                    changeSplitButtonState();
+                }
             }
         });
     }
@@ -189,7 +193,7 @@ public class PlayPanel extends JPanel {
     }
     
     public void showMessageDialog(String input) {
-        JOptionPane.showMessageDialog(this, input, "Hint", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, input, "Hint", JOptionPane.QUESTION_MESSAGE);
     }
 
     public void showChoiceDialog() {
@@ -201,7 +205,7 @@ public class PlayPanel extends JPanel {
     }
     
     public void showResultDialog(int index , Game.State state) {
-       JOptionPane.showMessageDialog(this, String.valueOf(state), "Hint", JOptionPane.ERROR_MESSAGE);
+       JOptionPane.showMessageDialog(this, String.valueOf(state), "Hint", JOptionPane.PLAIN_MESSAGE);
        if(index == 0 || index == 2) {
            playerActionListener.onGameOver();
        }
@@ -236,7 +240,12 @@ public class PlayPanel extends JPanel {
         spiltButton.setVisible(!spiltButton.isVisible());
     }
     private void playerSplit() {
+        changeSplitButtonState();
+        currenSet = 1;
+        hands.get(2).add(hands.get(0).get(1));
+        hands.get(3).add(hands.get(0).get(0));
         
+        new Animation.PokerSpilt(this, hands.get(3).get(0), 1);
     }
     private void setHandPokers() {
         playerDefaultHands = new ArrayList<>();
@@ -257,7 +266,7 @@ public class PlayPanel extends JPanel {
 
                 @Override
                 public void onCardClicked() {
-                    playerActionListener.onPlayerStand(currenSet);
+                    playerActionListener.onPlayerDouble(currenSet);
                 }
             };
         }
@@ -266,7 +275,7 @@ public class PlayPanel extends JPanel {
 
                 @Override
                 public void onCardClicked() {
-                    playerActionListener.onPlayerHit(currenSet);
+                    playerActionListener.onPlayerStand(currenSet);
                 }
             };
         }
@@ -276,6 +285,16 @@ public class PlayPanel extends JPanel {
         JLabel  tag = messageTags.get(index * 2 + type);
         tag.setVisible(true);
         tag.setEnabled(true);
+    }
+    
+    public void setChanged() {
+        currenSet = 2;
+        for(Poker poker: hands.get(2)) {
+            new Animation.PokerSpilt(this, poker, 1);
+        }
+        for(Poker poker: hands.get(3)) {
+            new Animation.PokerSpilt(this, poker, -1);
+        }
     }
     
     private void setMessageTags() {

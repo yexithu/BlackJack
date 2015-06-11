@@ -5,6 +5,7 @@
  */
 package blackjack.models;
 
+import blackjack.gui.Animation;
 import blackjack.util.ConsoleScanner;
 
 import java.util.ArrayList;
@@ -115,6 +116,8 @@ public class Game {
         for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
+        cards[0] = new Card(Card.Pattern.DIAMOND, Card.Figure.ACE);
+        cards[2] = new Card(Card.Pattern.DIAMOND, Card.Figure.ACE);
         Player.deal(cards[0]);
         Banker.deal(cards[1]);
         Player.deal(cards[2]);
@@ -125,27 +128,32 @@ public class Game {
         Player.display();
 
         gameActionListener.onInitial(cards);
-        if (Banker.isPeek()) {
-            gameActionListener.onBankerPeek();
-            gameActionListener.showChoiceDialog();
-            if (Banker.isBJ()) {
-                gameActionListener.onBankerDisplayCard();
-                if (Player.isBJ()) {
-                    Results.set(0, State.PUSH);
-                    gameActionListener.onShowResult(0, State.PUSH);
+        new Animation.expectantTaskManager(1500, new Animation.expectantTaskManager.ExpectantTask() {
+            @Override
+            public void expectantTask() {
+                if (Banker.isPeek()) {
+                    gameActionListener.onBankerPeek();
+                    gameActionListener.showChoiceDialog();
+                    if (Banker.isBJ()) {
+                        gameActionListener.onBankerDisplayCard();
+                        if (Player.isBJ()) {
+                            Results.set(0, State.PUSH);
+                            gameActionListener.onShowResult(0, State.PUSH);
+                        } else {
+                            gameActionListener.showTagMessage(1, 1);
+                            Results.set(0, State.BANKER_WIN);
+                            gameActionListener.onShowResult(0, State.BANKER_WIN);
+                        }
+                    }
+                } else if (Player.isBJ()) {
+                    gameActionListener.showTagMessage(0, 1);
+                    Results.set(0, State.PLAYER_WIN);
+                    gameActionListener.onShowResult(0, State.PLAYER_WIN);
                 } else {
-                    gameActionListener.showTagMessage(1, 1);
-                    Results.set(0, State.BANKER_WIN);
-                    gameActionListener.onShowResult(0, State.BANKER_WIN);
+                    //设置Choice Listener
                 }
             }
-        } else if (Player.isBJ()) {
-            gameActionListener.showTagMessage(0, 1);
-            Results.set(0, State.PLAYER_WIN);
-            gameActionListener.onShowResult(0, State.PLAYER_WIN);
-        } else {
-            //设置Choice Listener
-        }
+        });
     }
 
     private void bankerAct() {

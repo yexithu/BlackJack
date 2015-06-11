@@ -110,7 +110,10 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onDouble(int index, Card card) {
-
+                if(index == 0)
+                    playPanel.dealCard(index, card, true);
+                else
+                    playPanel.dealCard(index + 1, card, true);
             }
 
             @Override
@@ -125,7 +128,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onShowResult(int index, Game.State state) {
-
+                playPanel.showResultDialog(index, state);
             }
 
             @Override
@@ -150,7 +153,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onChangeSet() {
-
+                playPanel.setChanged();
             }
         });
     }
