@@ -21,6 +21,5 @@ public class BlackJack {
         //g.run();
         MainFrame mainFrame = new MainFrame();
         //mainFrame.setVisible(true);
-
     }
 }

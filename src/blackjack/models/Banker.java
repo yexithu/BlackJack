@@ -38,5 +38,4 @@ public class Banker extends Hand {
     public boolean continueHit() {
         return getTotal() < 17 || (getTotal() == 17 && isSoft());
     }
-
 }

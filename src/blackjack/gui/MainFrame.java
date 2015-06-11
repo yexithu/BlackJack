@@ -24,11 +24,9 @@ public class MainFrame extends JFrame {
     private PlayPanel playPanel;
 
     public MainFrame() {
-
         game = new Game("Martin");
         setSize(656, 399);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         setGame();
         setBetPanel();
         //setPlayPanel();
@@ -45,16 +43,12 @@ public class MainFrame extends JFrame {
                 game.refresh();//重置游戏状态，新开一局游戏
                 game.shuffle();//洗牌
                 game.bet(betNum);
-
                 remove(betPanel);
                 repaint();
                 setPlayPanel();
-
                 game.initial();
             }
         });
-
-        
     }
 
     private void setPlayPanel() {
@@ -94,8 +88,8 @@ public class MainFrame extends JFrame {
             public void onPlayerTakeInsure() {
                 game.playerInsure();
             }
-            
-            @Override 
+
+            @Override
             public void onGameOver() {
                 remove(playPanel);
                 repaint();
@@ -159,5 +153,4 @@ public class MainFrame extends JFrame {
             }
         });
     }
-
 }

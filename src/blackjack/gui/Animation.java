@@ -21,7 +21,6 @@ public class Animation {
         private Token token;
         static private double maxScaleRate = 1.3;
         static private int runTime = 400;
-
         public int value;
         public int startX;
         public int startY;
@@ -39,13 +38,11 @@ public class Animation {
             this.endY = ey;
             this.isAdd = isAdd;
             panel.add(token);
-
             new Thread(this).start();
         }
 
         @Override
         public void run() {
-
             double rate = 1;
             token.pauseClickedListener();
 //            BetPanel.defaultTokens.get(token.parValue).pauseClickedListener();
@@ -53,7 +50,6 @@ public class Animation {
                 rate += (maxScaleRate - 1) / 3;
                 int afterX = (int) (token.getX() - Token.radius * (rate - 1));
                 int afterY = (int) (token.getY() - Token.radius * (rate - 1));
-
                 token.setLocation(afterX, afterY);
                 token.setTokenSize((int) (Token.radius * rate));
                 //panel.repaint();
@@ -63,7 +59,6 @@ public class Animation {
                     Logger.getLogger(Animation.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
             token.setTokenSize(Token.radius);
             int paveMentX = (endX - token.getX() - Token.radius) / 7;
             int paveMentY = (endY - token.getY() - Token.radius) / 7;
@@ -71,10 +66,8 @@ public class Animation {
                 token.setLocation(token.getX() + paveMentX, token.getY() + paveMentY);
                 threadSleep(runTime / 10);
             }
-
             token.centerX = endX;
             token.centerY = endY;
-
             token.continueClickedListener();
 //            BetPanel.defaultTokens.get(token.parValue).continueClickedListener();
 
@@ -100,7 +93,6 @@ public class Animation {
     static public class PokerTurn implements Runnable {
 
         static private int runTime = 400;
-
         final private JPanel panel;
         private Poker poker;
         private int centerX;
@@ -112,7 +104,6 @@ public class Animation {
             this.poker = poker;
             this.centerX = poker.getX() + poker.getWidth() / 2;
             this.centerY = poker.getY() + poker.getHeight() / 2;
-
             panel.add(this.poker);
             new Thread(this).start();
         }
@@ -131,13 +122,10 @@ public class Animation {
                 if (angle >= Math.PI / 2 && poker.isBack == originSide) {
                     poker.turnOver();
                 }
-
                 poker.setCardSize((int) (Poker.width * rate * scaleRate), (int) (Poker.height * scaleRate));
                 poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
                 threadSleep(perFrame);
-
             }
-
             poker.setCardSize(Poker.width, Poker.height);
             poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
         }
@@ -162,7 +150,6 @@ public class Animation {
             this.centerY = poker.getY() + poker.getHeight() / 2;
             this.endX = eX;
             this.endY = eY;
-
             panel.add(this.poker);
             new Thread(this).start();
         }
@@ -181,16 +168,13 @@ public class Animation {
                 if (angle >= Math.PI / 2 && poker.isBack == originSide) {
                     poker.turnOver();
                 }
-
                 poker.setCardSize((int) (Poker.width * rate * scaleRate), (int) (Poker.height * scaleRate));
                 poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
                 threadSleep(perFrame);
 
             }
-
             poker.setCardSize(Poker.width, Poker.height);
             poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
-
             perFrame = moveRunTime / 10;
             int pavementX = (endX - poker.getX()) / 10;
             int pavementY = (endY - poker.getY()) / 10;
@@ -220,7 +204,6 @@ public class Animation {
             this.endY = eY;
             this.centerX = poker.getX() + poker.getWidth() / 2;
             this.centerY = poker.getY() + poker.getHeight() / 2;
-
             panel.add(this.poker);
             new Thread(this).start();
         }
@@ -232,13 +215,11 @@ public class Animation {
                 rate += (maxScaleRate - 1) / 3;
                 int afterX = (int) (poker.getX() - Poker.width * (rate - 1) / 2);
                 int afterY = (int) (poker.getY() - Poker.height * (rate - 1) / 2);
-
                 poker.setLocation(afterX, afterY);
                 poker.setCardSize((int) (Poker.width * rate), (int) (Poker.height * rate));
                 //panel.repaint();
                 threadSleep(runTime / 10);
             }
-
             poker.setCardSize(Poker.width, Poker.height);
             int paveMentX = (endX - poker.getX()) / 7;
             int paveMentY = (endY - poker.getY()) / 7;
@@ -258,9 +239,9 @@ public class Animation {
         }
 
     }
-    
-    public static class PokerPeeked implements Runnable{
-        
+
+    public static class PokerPeeked implements Runnable {
+
         static int runTime = 500;
         static double maxScaleRate = 1.3;
         public Poker poker;
@@ -269,66 +250,65 @@ public class Animation {
             this.poker = poker;
             new Thread(this).start();
         }
-        
+
         @Override
         public void run() {
             int perFrame = runTime / 10;
             int centerX = poker.getX() + Poker.width / 2;
             int topX = poker.getX();
             int topY = poker.getY();
-            
             double rateLine = 2 * (maxScaleRate - 1) / 10;
-            
-            for(int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 10; ++i) {
                 double scaleRate = maxScaleRate - Math.abs(maxScaleRate - 1 - rateLine * i);
-                int endX = (int)(centerX - Poker.width * scaleRate / 2);
-                int endY =(int) (topY - 3 * Poker.height * (scaleRate - 1)  / 4);
-                
+                int endX = (int) (centerX - Poker.width * scaleRate / 2);
+                int endY = (int) (topY - 3 * Poker.height * (scaleRate - 1) / 4);
                 poker.setCardSize((int) (Poker.width * scaleRate), (int) (Poker.height * scaleRate));
                 poker.setLocation(endX, endY);
                 threadSleep(perFrame);
             }
-            
             poker.setCardSize(Poker.width, Poker.height);
             poker.setLocation(topX, topY);
         }
-        
+
     }
-    
-    public static class expectantTaskManager implements Runnable{
+
+    public static class expectantTaskManager implements Runnable {
+
         private int time;
         private ExpectantTask expectantTask;
+
         public interface ExpectantTask {
+
             void expectantTask();
         }
-       
-        public expectantTaskManager(int time,ExpectantTask expectantTask) {
+
+        public expectantTaskManager(int time, ExpectantTask expectantTask) {
             this.expectantTask = expectantTask;
             this.time = time;
             new Thread(this).start();
         }
+
         @Override
         public void run() {
             threadSleep(time);
             expectantTask.expectantTask();
         }
     }
-    
-    public static class PokerSpilt implements Runnable{
-        
+
+    public static class PokerSpilt implements Runnable {
+
         static int offsetX = 300, offsetY = -50;
         static int runTime = 300;
         static double maxScaleRate = 1.5;
-        
         //1 远处 , -1 进出
         int flag;
         JPanel panel;
         Poker poker;
+
         public PokerSpilt(JPanel panel, Poker poker, int flag) {
             this.panel = panel;
             this.poker = poker;
             this.flag = flag;
-            
             new Thread(this).start();
         }
 
@@ -338,22 +318,19 @@ public class Animation {
             int offY = offsetY * flag;
             int endX = poker.getX() + offX;
             int endY = poker.getY() + offY;
-            
             int perFrame = runTime / 10;
-            for(int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 10; ++i) {
                 double rate = 1;
-                if(flag == 1) {
-                    rate =1 - ((1 - 1 / maxScaleRate) * i / 10);
-                }
-                else {
+                if (flag == 1) {
+                    rate = 1 - ((1 - 1 / maxScaleRate) * i / 10);
+                } else {
                     rate = (1 + ((maxScaleRate - 1) * i / 10)) / maxScaleRate;
                 }
-                
                 poker.setLocation(poker.getX() + offX / 10, poker.getY() + offY / 10);
-                poker.setCardSize((int)(Poker.width * rate) ,(int)( Poker.height * rate));
+                poker.setCardSize((int) (Poker.width * rate), (int) (Poker.height * rate));
                 threadSleep(perFrame);
-            }            
+            }
             poker.setLocation(endX, endY);
-        }        
+        }
     }
 }

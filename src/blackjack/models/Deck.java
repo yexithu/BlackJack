@@ -72,11 +72,4 @@ public class Deck implements Cloneable {
     public Card getCard() {
         return Cards.get(Count++);//发牌后计数器+1
     }
-
-    /*
-     public void showDeck() {
-     for (int i = 0; i < 52 * Num; i++) {
-     System.out.println(Cards.get(i).toString());
-     }
-     }*/
 }

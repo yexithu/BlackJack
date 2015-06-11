@@ -21,7 +21,6 @@ public class Game {
 
         NULL, PLAYER_WIN, BANKER_WIN, PUSH;
     }
-
     private final Player Player;
     private final Banker Banker;
     private final Deck Deck;
@@ -29,7 +28,6 @@ public class Game {
     private State Result;//游戏结果（对于没有分牌的简单情况）
     private ArrayList<State> Results;//游戏结果组（有分牌的情况）
     private int pool, bet;//pool：赌池，bet：赌注
-
     private GameActionListener gameActionListener;
 
     public Game(String Name) {
@@ -42,11 +40,9 @@ public class Game {
     }
 
     public void run() {
-
         //到此运行至bet()
         //MainFrame 调用返回四张牌，放在数组里
         initial();//发初始牌等初始化, 
-
         //玩家拿到BlackJack的提示
         if (Player.isBJ()) {
             System.out.println("You get BJ!\n");
@@ -108,7 +104,6 @@ public class Game {
         if (!Player.isSplit()) {
             result();//如果玩家没有分牌，按照简单情形计算游戏结果
         }
-
     }
 
     public void initial() {
@@ -126,7 +121,6 @@ public class Game {
         Player.display();
         Results.clear();
         Results.add(State.NULL);
-
         gameActionListener.onInitial(cards);
         new Animation.expectantTaskManager(1500, new Animation.expectantTaskManager.ExpectantTask() {
             @Override
@@ -159,11 +153,6 @@ public class Game {
     private void bankerAct() {
         gameActionListener.onBankerDisplayCard();
         while (!Banker.isBust() && Banker.continueHit()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                //生吞了啊啊啊！
-            }
             Card c = Deck.getCard();
             Banker.deal(c);
             gameActionListener.onDeal(3, c);

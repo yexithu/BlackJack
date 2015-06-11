@@ -29,9 +29,7 @@ public class Token extends JLabel {
     public int parValue;
     public int centerX, centerY;
     static public int radius = 40;
-
     private static BufferedImage tokensBufferedImage;
-
     private ImageIcon tokenIcon;
     private MouseAdapter mouseAdapter;
     private TokenClickedListener tokenClickedListener;
@@ -91,20 +89,14 @@ public class Token extends JLabel {
         this.setSize(tokenIcon.getIconWidth(), tokenIcon.getIconHeight());
     }
 
-    /*
-     Token按钮接口
-     */
+//     Token按钮接口
     public interface TokenClickedListener {
-        /*
-         图片被点击时调用
-         */
 
+//         图片被点击时调用
         public void onTokensClicked(int parValue);
     }
 
-    /*
-     调用该方法为Token增加Listener
-     */
+//     调用该方法为Token增加Listener
     public void setClickedListener(TokenClickedListener listener) {
         tokenClickedListener = listener;
         mouseAdapter = new MouseAdapter() {

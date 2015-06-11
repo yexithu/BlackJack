@@ -22,31 +22,28 @@ import javax.swing.JLabel;
  *
  * @author Re
  */
-public class Poker extends JLabel{
-    
+public class Poker extends JLabel {
+
     public static int width = 110, height = 155;
     public static int defultX = 518, defaultY = 4;
     public int positionX, positionY;
     public Card card;
     public boolean isBack = false;
     public boolean isCoverred = true;
-    
-    
     static private BufferedImage cardsBufferedImage;
-    
     private ImageIcon cardIcon;
     private CardClickedListener cardClickedListener;
     private MouseAdapter mouseAdapter;
     private BufferedImage originImage;
-    
+
     static {
-        try {    
+        try {
             cardsBufferedImage = ImageIO.read(new FileInputStream("res/cards.png"));
         } catch (IOException ex) {
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public Poker(int posX, int posY) {
         this.positionX = posX;
         this.positionY = posY;
@@ -59,88 +56,78 @@ public class Poker extends JLabel{
         this.card = card;
         setOriginImage();
         setCardSize(width, height);
-    } 
-    
+    }
+
     public Poker(int posX, int posY, Card card, boolean bool) {
         this(posX, posY, card);
         this.isBack = bool;
         setOriginImage();
         setCardSize(width, height);
     }
-    
+
     public Poker(Poker poker) {
         this(poker.getX(), poker.getY(), poker.card);
         this.isBack = poker.isBack;
         setOriginImage();
         setCardSize(width, height);
     }
-        
-    
+
     public void setClickedListener(CardClickedListener cardListener) {
         this.cardClickedListener = cardListener;
         mouseAdapter = new MouseAdapter() {
-            
             @Override
             public void mousePressed(MouseEvent me) {
-                if(!isCoverred){
-                    cardClickedListener.onCardClicked();    
-                }
-                else {
-                    if(me.getX() < 25) {
-                        cardClickedListener.onCardClicked();    
+                if (!isCoverred) {
+                    cardClickedListener.onCardClicked();
+                } else {
+                    if (me.getX() < 25) {
+                        cardClickedListener.onCardClicked();
                     }
                 }
-                
             }
         };
         this.addMouseListener(mouseAdapter);
     }
-    
-    
-    
+
     public void removeMouseAdapter() {
         this.removeMouseListener(mouseAdapter);
     }
-    
-    
+
     /*
-    调用setClickedListener增加监听
-    */
-    public interface CardClickedListener{
+     调用setClickedListener增加监听
+     */
+    public interface CardClickedListener {
+
         void onCardClicked();
     }
-    
-    private void setOriginImage() {
 
+    private void setOriginImage() {
         int startX = 0, startY = 0;
         int wid, hei;
         wid = cardsBufferedImage.getWidth() / 16;
         hei = cardsBufferedImage.getHeight() / 4;
-        if(isBack) {
+        if (isBack) {
             startX = 13 * wid;
             startY = 0 * hei;
-        }
-        else {
+        } else {
             startX = card.getValueIndex() * wid;
             startY = card.getTypeIndex() * hei;
         }
-
         originImage = cardsBufferedImage.getSubimage(startX, startY, wid, hei);
     }
-    
+
     public void setCardSize(int width, int height) {
         setOriginImage();
         width = Math.max(width, 1);
         cardIcon.setImage(originImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH));
-        
+
         setIcon(cardIcon);
         setSize(cardIcon.getIconWidth(), cardIcon.getIconHeight());
     }
-    
+
     public void turnOver() {
         this.isBack = !this.isBack;
         setOriginImage();
         setCardSize(this.getWidth(), this.getHeight());
     }
 }
-

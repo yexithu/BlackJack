@@ -117,5 +117,4 @@ public class Hand implements Cloneable {
     public boolean isBust() {
         return getTotal() > 21;
     }
-
 }

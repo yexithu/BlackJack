@@ -34,15 +34,11 @@ public class BetPanel extends JPanel {
     static public ArrayList<Token> tableTokens;
     static Hashtable<Integer, Integer> leftTokensNumber = new Hashtable<>(6);
     static Hashtable<Integer, Token> defaultTokens = new Hashtable<>(6);
-
     static Poker cardGui;
-
     private int totalBetValue = 0;
     private int totalLeftValue = 0;
-
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
-
     private BetFinishedListener betFinishedListener;
 
     public BetPanel() {
@@ -52,12 +48,9 @@ public class BetPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
-
         ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
         g.drawImage(backgroundImage.getImage(), 0, 0, this);
-
         for (Token tableToken : tableTokens) {
             if (tableToken != null) {
                 this.remove(tableToken);
@@ -76,7 +69,6 @@ public class BetPanel extends JPanel {
 
     private void setDefaultToken(JPanel thisPanel) {
         tableTokens = new ArrayList<>();
-
         Token token1 = new Token(1, 100, 85);
         Token token5 = new Token(5, 100, 185);
         Token token25 = new Token(25, 100, 285);
@@ -89,7 +81,6 @@ public class BetPanel extends JPanel {
         defaultTokens.put(100, token100);
         defaultTokens.put(500, token500);
         defaultTokens.put(1000, token1000);
-
         Iterator iterator = defaultTokens.keySet().iterator();
         while (iterator.hasNext()) {
             Integer next = (Integer) iterator.next();
@@ -106,12 +97,11 @@ public class BetPanel extends JPanel {
             });
         }
     }
-    
+
     private void setDefaultCard() {
         cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
         cardGui.isCoverred = false;
         add(cardGui);
-
         cardGui.setClickedListener(new Poker.CardClickedListener() {
             @Override
             public void onCardClicked() {
@@ -129,7 +119,6 @@ public class BetPanel extends JPanel {
             totalBetValue -= token.parValue;
             totalLeftValue += token.parValue;
             leftTokensNumber.replace(token.parValue, leftTokensNumber.get(token.parValue) + 1);
-
         }
     }
 
@@ -144,7 +133,6 @@ public class BetPanel extends JPanel {
         tableTokens.add(0, addedToken.getToken());
         leftTokensNumber.replace(defaultToken.parValue, (leftTokensNumber.get(defaultToken.parValue) - 1));
         totalBetValue += defaultToken.parValue;
-
         if ((int) leftTokensNumber.get(defaultToken.parValue) == 0) {
             defaultToken.setVisible(false);
             defaultToken.setEnabled(false);
