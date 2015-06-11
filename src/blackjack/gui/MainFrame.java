@@ -80,7 +80,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onPlayerSurrand(int index) {
-                
+                game.playerSurrend(index);
             }
 
             @Override
@@ -142,6 +142,11 @@ public class MainFrame extends JFrame {
             public void showTagMessage(int index, int type) {
 
             }//index 0Player 1Banker type 0Bust 1BJ
+
+            @Override
+            public void onChangeSet() {
+
+            }
         });
     }
 

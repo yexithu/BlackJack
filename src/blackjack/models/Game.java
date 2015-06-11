@@ -125,22 +125,25 @@ public class Game {
         Player.display();
 
         gameActionListener.onInitial(cards);
-        if(Banker.isPeek()){
+        if (Banker.isPeek()) {
             gameActionListener.onBankerPeek();
             gameActionListener.showChoiceDialog();
-            if(Banker.isBJ()){
+            if (Banker.isBJ()) {
                 gameActionListener.onBankerDisplayCard();
-                if(Player.isBJ()){
-                    gameActionListener.onShowResult(0, Result=State.PUSH);
-                }else{
+                if (Player.isBJ()) {
+                    Results.set(0, State.PUSH);
+                    gameActionListener.onShowResult(0, State.PUSH);
+                } else {
                     gameActionListener.showTagMessage(1, 1);
-                    gameActionListener.onShowResult(0, Result=State.BANKER_WIN);
+                    Results.set(0, State.BANKER_WIN);
+                    gameActionListener.onShowResult(0, State.BANKER_WIN);
                 }
             }
-        }else if(Player.isBJ()){
+        } else if (Player.isBJ()) {
             gameActionListener.showTagMessage(0, 1);
-            gameActionListener.onShowResult(0, Result=State.PLAYER_WIN);
-        }else{
+            Results.set(0, State.PLAYER_WIN);
+            gameActionListener.onShowResult(0, State.PLAYER_WIN);
+        } else {
             //设置Choice Listener
         }
     }
@@ -274,6 +277,40 @@ public class Game {
         }
     }
 
+    public void playerSurrend(int index) {
+        Player.setSurrenders(index, true);
+        Results.set(index, State.BANKER_WIN);
+        if (index == 1) {
+            gameActionListener.onChangeSet();
+        } else {
+            gameActionListener.onShowResult(index, State.BANKER_WIN);
+        }
+    }
+
+    public void playerStand(int index) {
+        if (Player.isSplit()) {
+            if (index == 1) {
+                gameActionListener.onChangeSet();
+            } else {
+                bankerAct();
+                Results.set(index, compare(index));
+                gameActionListener.onShowResult(index, Results.get(index));
+            }
+        }
+    }
+
+    private State compare(int index) {
+        State result;
+        if (Player.getTotal(index) < Banker.getTotal()) {
+            result = State.BANKER_WIN;
+        } else if (Player.getTotal(index) > Banker.getTotal()) {
+            result = State.PLAYER_WIN;
+        } else {
+            result = State.PUSH;
+        }
+        return result;
+    }
+
     private void playerBust() {
         System.out.println("Bust!\n");
         Result = State.BANKER_WIN;
@@ -352,6 +389,16 @@ public class Game {
         Player.changeCounter(-bet);
         pool += bet;
         gameActionListener.onDouble(index, Deck.getCard());
+        Player.deal(Deck.getCard());
+        if (Player.isBust()) {
+            gameActionListener.showTagMessage(0, 0);
+            Results.set(index, State.BANKER_WIN);
+            if (index == 1) {
+                gameActionListener.onChangeSet();
+            } else {
+                gameActionListener.onShowResult(index, Results.get(index));
+            }
+        }
     }
 
     public void playerSplit() {
@@ -442,9 +489,10 @@ public class Game {
 
     }
 
-    public void playerBust(int i) {
-        System.out.println("Bust!\n");
-        Results.set(i, State.BANKER_WIN);
+    public void playerBust(int index) {
+        gameActionListener.showTagMessage(0, 0);
+        Results.set(index, State.BANKER_WIN);
+        gameActionListener.onShowResult(index, State.BANKER_WIN);
     }
 
     public void setGameActionListener(GameActionListener gameActionListener) {
@@ -473,5 +521,7 @@ public class Game {
         void onShowMessageDialog(String input);
 
         void showTagMessage(int index, int type);
+
+        void onChangeSet();
     }
 }
