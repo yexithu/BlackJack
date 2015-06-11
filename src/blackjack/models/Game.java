@@ -39,73 +39,6 @@ public class Game {
         Deck.shuffle();//第一次运行前先洗牌
     }
 
-    public void run() {
-        //到此运行至bet()
-        //MainFrame 调用返回四张牌，放在数组里
-        initial();//发初始牌等初始化, 
-        //玩家拿到BlackJack的提示
-        if (Player.isBJ()) {
-            System.out.println("You get BJ!\n");
-        }
-        //庄家需要偷窥的情况
-        if (Banker.isPeek()) {
-            System.out.println("The banker peeks~\n");
-            //买保险
-            if (isPlayerInsure()) {
-                playerInsure();
-            }
-            //庄家拿到BlackJack的情况
-            if (Banker.isBJ()) {
-                Banker.display();
-                System.out.println("Banker get BJ!\n");
-                if (Player.isBJ()) {
-                    Result = State.PUSH;
-//                        result();
-                } else {
-                    Result = State.BANKER_WIN;
-//                        result();
-                }
-            } else {
-                System.out.println("\nNothing happened~\n");
-            }
-        }
-        //如果庄家不是BJ，游戏继续
-        if (!Banker.isBJ()) {
-            //如果玩家拿到BJ的情况
-            if (Player.isBJ()) {
-                Banker.display();
-                Result = State.PLAYER_WIN;
-//                    result();
-            } else { //如果玩家没拿到BJ，游戏继续
-                playerSplit();//分牌
-                //如果玩家进行了分牌，游戏按照分牌后的流程进行
-                if (Player.isSplit()) {
-                    splitInitial();//分牌后的初始化操作
-                    splitProcess();//分牌后的游戏流程
-                } else if (isPlayerDouble()) { //如果玩家没有分牌，游戏按没有分牌的简单情形继续
-                    playerDouble();//加倍
-                    if (Player.isBust()) {
-                        playerBust();//玩家爆牌的处理
-                    } else {
-                        bankerAct();//如果加倍后没有爆牌，庄家行动
-                        Result = compare(Result);//更新游戏结果
-//                            result();
-                    }
-                } else {
-                    playerChoice();//如果玩家没有加倍，玩家选择要牌/停牌/投降
-                    if (!Player.isBust() && !Player.isSurrender()) {
-                        bankerAct();//如果玩家没有爆牌也没有投降，庄家行动
-                        Result = compare(Result);//更新游戏结果
-//                            result();
-                    }
-                }
-            }
-        }
-        if (!Player.isSplit()) {
-            result();//如果玩家没有分牌，按照简单情形计算游戏结果
-        }
-    }
-
     public void initial() {
         Card[] cards = new Card[4];
         for (int i = 0; i < 4; ++i) {
@@ -158,31 +91,19 @@ public class Game {
             gameActionListener.onDeal(3, c);
         }
         if (Banker.isBust()) {
+            gameActionListener.showTagMessage(1, 0);
             if (Player.getHandNum() == 1) {
                 Results.set(0, State.PLAYER_WIN);
                 gameActionListener.onShowResult(0, State.PLAYER_WIN);
             } else {
                 for (int i = 1; i < 3; i++) {
                     if (Results.get(i) == State.NULL) {
-                        Results.set(i, compare(i));
-                        gameActionListener.onShowResult(i, Results.get(i));
+                        Results.set(i, State.PLAYER_WIN);
+                        gameActionListener.onShowResult(i, State.PLAYER_WIN);
                     }
                 }
             }
         }
-    }
-
-    private State compare(State result) {
-        if (result == State.NULL) {
-            if (Player.getTotal() < Banker.getTotal()) {
-                result = State.BANKER_WIN;
-            } else if (Player.getTotal() > Banker.getTotal()) {
-                result = State.PLAYER_WIN;
-            } else {
-                result = State.PUSH;
-            }
-        }
-        return result;
     }
 
     public void refresh() {
@@ -197,11 +118,6 @@ public class Game {
         pool = 0;
     }
 
-    public boolean start() {
-        System.out.println("Do you want to start a new game?Y/N");
-        return ConsoleScanner.getYorN();
-    }
-
     public boolean isShuffle() {
         return Deck.isShuffle(Setting.getPenetration());
     }
@@ -209,7 +125,6 @@ public class Game {
     public void shuffle() {
         if (isShuffle()) {
             Deck.shuffle();
-            System.out.println("The deck has been shuffled!");
             if (Setting.getBurnCardNum() > 0) {
                 burn();
             }
@@ -219,69 +134,17 @@ public class Game {
     public void burn() {
         int i = Setting.getBurnCardNum();
         Deck.burn(i);
-        System.out.println("Burn " + i + " cards\n");
     }
 
     public void bet(int betNum) {
-        System.out.println("How much do you want to bet?");
         Player.changeCounter(-betNum);
         bet = betNum;
         pool = bet;
     }
 
-    public boolean isPlayerInsure() {
-        System.out.println("Banker may get BJ, do you want to buy insurance?Y/N");
-        return ConsoleScanner.getYorN();
-    }
-
     public void playerInsure() {
         Player.changeCounter(-pool / 2);
         Player.setInsure(true);
-//        System.out.println("Insurance bought!");
-    }
-
-    public boolean isPlayerDouble() {
-        System.out.println("Do you want to double?Y/N");
-        return ConsoleScanner.getYorN();
-    }
-
-    public void playerDouble() {
-        Player.changeCounter(-pool);
-        pool *= 2;
-        Player.deal(Deck.getCard());
-        Player.display();
-    }
-
-    public void playerChoice() {
-        boolean loop = true;
-        while (loop) {
-            System.out.println("Your choice? Hit:H Stand:S R:Surrender");
-            switch (ConsoleScanner.getChoice("H", "h", "S", "s", "R", "r")) {
-                case "H":
-                case "h":
-                    Player.deal(Deck.getCard());
-                    Player.display();
-                    break;
-                case "S":
-                case "s":
-                    loop = false;
-                    break;
-                case "R":
-                case "r":
-                    Player.setSurrender(true);
-                    Result = State.BANKER_WIN;
-                    System.out.println("You have surrendered!");
-//                    result();
-                    loop = false;
-                    break;
-            }
-            if (Player.isBust()) {
-                System.out.println("Bust!\n");
-                Result = State.BANKER_WIN;
-                loop = false;
-//                result();
-            }
-        }
     }
 
     public void playerHit(int index) {
@@ -314,6 +177,12 @@ public class Game {
                 Results.set(index, compare(index));
                 gameActionListener.onShowResult(index, Results.get(index));
             }
+            if (index == 2) {
+                if (Results.get(1) == State.NULL) {
+                    Results.set(1, compare(1));
+                    gameActionListener.onShowResult(1, Results.get(1));
+                }
+            }
         }
     }
 
@@ -327,11 +196,6 @@ public class Game {
             result = State.PUSH;
         }
         return result;
-    }
-
-    private void playerBust() {
-        System.out.println("Bust!\n");
-        Result = State.BANKER_WIN;
     }
 
     public void result() {
@@ -421,6 +285,12 @@ public class Game {
                     Results.set(index, compare(index));
                     gameActionListener.onShowResult(index, Results.get(index));
                 }
+                if (index == 2) {
+                    if (Results.get(1) == State.NULL) {
+                        Results.set(1, compare(1));
+                        gameActionListener.onShowResult(1, Results.get(1));
+                    }
+                }
             }
         }
     }
@@ -435,6 +305,15 @@ public class Game {
                 gameActionListener.onChangeSet(c);
             } else {
                 gameActionListener.onShowResult(index, Results.get(index));
+                if (index == 2) {
+                    if (Results.get(1) == State.NULL) {
+                        bankerAct();
+                        if (Results.get(1) == State.NULL) {
+                            Results.set(1, compare(1));
+                            gameActionListener.onShowResult(1, Results.get(1));
+                        }
+                    }
+                }
             }
         }
     }
@@ -445,21 +324,7 @@ public class Game {
         Player.split();
         Card c = Deck.getCard();
         Player.deal(1, c);
-        gameActionListener.onDeal(0, c);
-    }
-
-    public void playerSplit() {
-        int i = 0;
-        do {
-            if (Player.isSplit(i)) {
-                Player.split(i, Deck.getCard(), Deck.getCard());
-                if (!Player.isSplit()) {
-                    Player.setSplit(true);
-                }
-                i--;
-            }
-            i++;
-        } while (i < Player.getHandNum());
+        gameActionListener.onDeal(1, c);
     }
 
     public void splitInitial() {
@@ -468,72 +333,6 @@ public class Game {
             Results.add(State.NULL);
         }
         Player.initialSurrenders();
-    }
-
-    public void splitProcess() {
-        int i = 0;
-        boolean flag = false;
-        //让玩家顺序处理他的各副手牌
-        do {
-            Player.display(i);
-            if (isPlayerDouble()) {
-                playerDouble(i);
-                if (Player.isBust(i)) {
-                    playerBust(i);
-                }
-            } else {
-                playerChoice(i);
-            }
-            i++;
-        } while (i < Player.getHandNum());
-        //判断是否庄家还需行动,如果玩家所有手牌都已爆牌或投降，则庄家不必行动，标志置否
-        for (i = 0; i < Player.getHandNum(); i++) {
-            if (!(Player.isBust(i) || Player.getSurrenders(i))) {
-                flag = true;
-            }
-        }
-        if (flag) {
-            bankerAct();
-        }
-        //顺序计算玩家各副手牌游戏结果
-        for (i = 0; i < Player.getHandNum(); i++) {
-            if (Results.get(i) == State.NULL) {
-                Results.set(i, compare(Results.get(i)));
-            }
-            result(i);
-        }
-        Player.showCounter();
-    }
-
-    public void playerChoice(int i) {
-        boolean loop = true;
-        while (loop) {
-            System.out.println("Your choice? Hit:H Stand:S R:Surrender");
-            switch (ConsoleScanner.getChoice("H", "h", "S", "s", "R", "r")) {
-                case "H":
-                case "h":
-                    Player.deal(i, Deck.getCard());
-                    Player.display(i);
-                    break;
-                case "S":
-                case "s":
-                    loop = false;
-                    break;
-                case "R":
-                case "r":
-                    Player.setSurrenders(i, true);
-                    Results.set(i, State.BANKER_WIN);
-                    System.out.println("You have surrendered!");
-                    loop = false;
-                    break;
-            }
-            if (Player.isBust(i)) {
-                System.out.println("Bust!\n");
-                Results.set(i, State.BANKER_WIN);
-                loop = false;
-            }
-        }
-
     }
 
     public void playerBust(int index) {

@@ -234,7 +234,7 @@ public class PlayPanel extends JPanel {
         currenSet = 1;
         hands.get(1).add(hands.get(0).get(1));
         hands.get(2).add(hands.get(0).get(0));
-        new Animation.PokerSpilt(this, hands.get(3).get(0), 1);
+        new Animation.PokerSpilt(this, hands.get(0).get(0), 1);
     }
 
     private void setHandPokers() {
@@ -250,7 +250,7 @@ public class PlayPanel extends JPanel {
     }
 
     private Poker.CardClickedListener getDealedCardListener(int index) {
-        if (index == 1) {
+        if (index == 3) {
             return new Poker.CardClickedListener() {
                 @Override
                 public void onCardClicked() {
@@ -280,7 +280,7 @@ public class PlayPanel extends JPanel {
         for (Poker poker : hands.get(3 - currenSet)) {
             new Animation.PokerSpilt(this, poker, 1);
         }
-        for (Poker poker : hands.get(2)) {
+        for (Poker poker : hands.get(currenSet)) {
             new Animation.PokerSpilt(this, poker, -1);
         }
     }
