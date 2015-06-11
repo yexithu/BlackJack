@@ -166,7 +166,7 @@ public class Game {
             }
             Card c = Deck.getCard();
             Banker.deal(c);
-            gameActionListener.onDeal(1, c);
+            gameActionListener.onDeal(3, c);
         }
         if (Banker.isBust()) {
             if (Player.getHandNum() == 1) {
@@ -315,16 +315,14 @@ public class Game {
     }
 
     public void playerStand(int index) {
-        if (Player.isSplit()) {
-            if (index == 1) {
-                Card c = Deck.getCard();
-                Player.deal(2, c);
-                gameActionListener.onChangeSet(c);
-            } else {
-                bankerAct();
-                Results.set(index, compare(index));
-                gameActionListener.onShowResult(index, Results.get(index));
-            }
+        if (index == 1) {
+            Card c = Deck.getCard();
+            Player.deal(2, c);
+            gameActionListener.onChangeSet(c);
+        } else {
+            bankerAct();
+            Results.set(index, compare(index));
+            gameActionListener.onShowResult(index, Results.get(index));
         }
     }
 
