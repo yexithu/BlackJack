@@ -6,6 +6,7 @@
 package blackjack.models;
 
 import blackjack.util.ConsoleScanner;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -13,9 +14,11 @@ import java.util.ArrayList;
  * @author Martin
  */
 //玩家的抽象表示
-public class Player extends Hands {
+public class Player extends Hands implements Serializable {
 
     private final String Name;//名字
+    private final int index;
+    private static int count = 0;
     private int Counter;//筹码数
     private boolean Insure, Surrender, Split;//保险标志，投降标志，分牌标志
     private ArrayList<Boolean> Surrenders;//投降标志组
@@ -27,6 +30,12 @@ public class Player extends Hands {
         Counter = 1000;
         Insure = false;
         Surrender = false;
+        index = count++;
+    }
+
+    public Player(int index) {
+        this.index = index;
+        Name = null;
     }
 
     public int getCounter() {
@@ -163,5 +172,12 @@ public class Player extends Hands {
     public void display() {
         System.out.println("\nYou get:");
         HandArray.get(0).display();
+    }
+
+    /**
+     * @return the index
+     */
+    public int getIndex() {
+        return index;
     }
 }
