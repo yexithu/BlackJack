@@ -6,8 +6,6 @@
 package blackjack.models;
 
 import blackjack.gui.Animation;
-import blackjack.util.ConsoleScanner;
-
 import java.util.ArrayList;
 
 /**
@@ -65,7 +63,9 @@ public class Game {
             public void expectantTask() {
                 if (Banker.isPeek()) {
                     gameActionListener.onBankerPeek();
-                    gameActionListener.showChoiceDialog();
+                    if (Banker.isInsureable()) {
+                        gameActionListener.showChoiceDialog();
+                    }
                     if (Banker.isBJ()) {
                         gameActionListener.onBankerDisplayCard();
                         if (Player.isBJ()) {
@@ -114,13 +114,11 @@ public class Game {
             gameActionListener.showTagMessage(1, 0);
             if (Player.getHandNum() == 1) {
                 Results.set(0, State.PLAYER_WIN);
-//                result(0);
             } else {
                 for (int index = 1; index < 3; index++) {
                     if (Results.get(index) == State.NULL) {
                         Results.set(index, State.PLAYER_WIN);
                     }
-//                    result(index);
                 }
             }
         }

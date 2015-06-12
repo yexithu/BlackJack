@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +40,8 @@ public class BetPanel extends JPanel {
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
     private BetFinishedListener betFinishedListener;
-    static ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
+    static ImageIcon backgroundImage = new ImageIcon(BetPanel.class.getResource("/res/betBackground.png"));
+
     public BetPanel() {
         setLayout(null);
         setValueLabels();
@@ -59,9 +59,7 @@ public class BetPanel extends JPanel {
             }
         }
 
-        Iterator iterator = defaultTokens.keySet().iterator();
-        while (iterator.hasNext()) {
-            Integer next = (Integer) iterator.next();
+        for (Integer next : defaultTokens.keySet()) {
             this.remove(defaultTokens.get(next));
             this.add(defaultTokens.get(next));
         }
@@ -82,9 +80,7 @@ public class BetPanel extends JPanel {
         defaultTokens.put(100, token100);
         defaultTokens.put(500, token500);
         defaultTokens.put(1000, token1000);
-        Iterator iterator = defaultTokens.keySet().iterator();
-        while (iterator.hasNext()) {
-            Integer next = (Integer) iterator.next();
+        for (Integer next : defaultTokens.keySet()) {
             Token defaultToken = defaultTokens.get(next);
             thisPanel.add(defaultToken);
             leftTokensNumber.put(defaultToken.parValue, 10);

@@ -14,7 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -62,9 +61,7 @@ public class PlayPanel extends JPanel {
             this.remove(tagLabel);
             this.add(tagLabel);
         }
-        Iterator interator = hands.keySet().iterator();
-        while (interator.hasNext()) {
-            Integer next = (Integer) interator.next();
+        for (Integer next : hands.keySet()) {
             ArrayList<Poker> pokers = hands.get(next);
             for (Poker poker : pokers) {
                 this.remove(poker);

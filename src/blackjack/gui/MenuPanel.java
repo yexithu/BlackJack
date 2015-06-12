@@ -18,39 +18,44 @@ import javax.swing.JPanel;
  *
  * @author Re
  */
-public class MenuPanel extends JPanel{
-    static class BigTextLabel extends JPanel{
-        static ImageIcon imageIcon = new ImageIcon("res/mainMenuButton.png");
+public class MenuPanel extends JPanel {
+
+    static class BigTextLabel extends JPanel {
+
+        static ImageIcon imageIcon = new ImageIcon(MenuPanel.class.getResource("/res/mainMenuButton.png"));
         JLabel jLabel;
+
         public BigTextLabel(String text) {
             setLayout(null);
             jLabel = new JLabel(text);
             jLabel.setHorizontalAlignment(JLabel.CENTER);
             jLabel.setVerticalAlignment(JLabel.CENTER);
             jLabel.setSize(130, 80);
-            jLabel.setFont(new java.awt.Font("Dialog",   1,   25));
+            jLabel.setFont(new java.awt.Font("Dialog", 1, 25));
             jLabel.setForeground(Color.WHITE);
             this.add(jLabel);
             this.setSize(130, 80);
             this.setVisible(true);
         }
-        
+
+        @Override
         public void paintComponent(Graphics g) {
             g.drawImage(imageIcon.getImage(), 0, 0, this);
         }
     }
-    
+
     private BigTextLabel startLabel;
     private BigTextLabel helpLabel;
     private BigTextLabel playerLabel;
     private BigTextLabel aboutLabel;
     private MainMenuClickedListener mainMenuClickedListener;
-    static private ImageIcon backgroundIcon = new ImageIcon("res/mainPanelBackGround.png");
+    static private ImageIcon backgroundIcon = new ImageIcon(MenuPanel.class.getResource("/res/mainPanelBackGround.png"));
+
     public MenuPanel() {
         setLayout(null);
         setLabels();
     }
-    
+
     private void setLabels() {
         startLabel = new BigTextLabel("Start");
         add(startLabel);
@@ -64,42 +69,51 @@ public class MenuPanel extends JPanel{
         aboutLabel = new BigTextLabel("About");
         add(aboutLabel);
         aboutLabel.setLocation(410, 230);
-                
+
     }
-    
+
     public void setMainMenuListeners(MainMenuClickedListener mainMenuClickedListener) {
         this.mainMenuClickedListener = mainMenuClickedListener;
         startLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent me) {
                 mainMenuClickedListener.onStart();
             }
         });
         helpLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent me) {
                 mainMenuClickedListener.onHelp();
             }
         });
         playerLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent me) {
                 mainMenuClickedListener.onStart();
             }
         });
         aboutLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent me) {
                 mainMenuClickedListener.onAbout();
             }
         });
-        
+
     }
-    
+
+    @Override
     public void paintComponent(Graphics g) {
-            g.drawImage(backgroundIcon.getImage(), 0, 0, this);
+        g.drawImage(backgroundIcon.getImage(), 0, 0, this);
     }
-    
-    public interface MainMenuClickedListener{
-        public void onStart() ;
+
+    public interface MainMenuClickedListener {
+
+        public void onStart();
+
         public void onPlayer();
+
         public void onHelp();
+
         public void onAbout();
     }
 }
