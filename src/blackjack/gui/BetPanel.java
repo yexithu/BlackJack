@@ -41,7 +41,7 @@ public class BetPanel extends JPanel {
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
     private BetFinishedListener betFinishedListener;
-
+    static ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
     public BetPanel() {
         setLayout(null);
         setValueLabels();
@@ -51,7 +51,6 @@ public class BetPanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
         g.drawImage(backgroundImage.getImage(), 0, 0, this);
         for (Token tableToken : tableTokens) {
             if (tableToken != null) {
