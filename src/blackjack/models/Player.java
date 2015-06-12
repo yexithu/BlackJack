@@ -148,4 +148,8 @@ public class Player extends Hands implements Serializable {
     public int getIndex() {
         return index;
     }
+    
+    public String getName() {
+        return this.Name;
+    }
 }

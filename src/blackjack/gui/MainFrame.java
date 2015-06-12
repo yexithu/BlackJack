@@ -7,6 +7,7 @@ package blackjack.gui;
 
 import blackjack.models.Card;
 import blackjack.models.Game;
+import blackjack.models.PlayerSet;
 import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,18 +24,21 @@ public class MainFrame extends JFrame {
     private MenuPanel menuPanel;
     private BetPanel betPanel;
     private PlayPanel playPanel;
-
+    private PlayerPanel playerPanel;
+    private PlayerSet playerSet;
+    private int currentPlayerIndex = 0;
     public MainFrame() {
         game = new Game("Martin");
+        playerSet = new PlayerSet();
+        playerSet.readSet();
+        System.out.println(playerSet.getSet().size());
         setSize(646, 389);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        setMenuPanel();
         setResizable(false);
         setLocationRelativeTo(null);
         setTitle("BlackJack");
         setVisible(true);
-
-        setMenuPanel();
     }
 
     private void setBetPanel() {
@@ -172,14 +176,18 @@ public class MainFrame extends JFrame {
             @Override
             public void onStart() {
                 remove(menuPanel);
+                setBetPanel();
                 paintComponents(getGraphics());
                 setGame();
-                setBetPanel();
+                paintComponents(getGraphics());
             }
 
             @Override
             public void onPlayer() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                remove(menuPanel);
+                playerPanel = new PlayerPanel(playerSet.getSet());
+                add(playerPanel);
+                paintComponents(getGraphics());
             }
 
             @Override
