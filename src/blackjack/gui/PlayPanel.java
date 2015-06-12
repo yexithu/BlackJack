@@ -56,7 +56,7 @@ public class PlayPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon background = new ImageIcon("res/playBackground.png");
+        ImageIcon background = new ImageIcon(PlayPanel.class.getResource("/res/playBackground.png"));
         g.drawImage(background.getImage(), 0, 0, this);
         for (JLabel tagLabel : messageTags) {
             this.remove(tagLabel);
@@ -80,7 +80,7 @@ public class PlayPanel extends JPanel {
     private void setDefaultCard() {
         cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
         cardGui.isCoverred = false;
-        
+
         add(cardGui);
     }
 
@@ -112,13 +112,13 @@ public class PlayPanel extends JPanel {
 
             @Override
             public void expectantTask() {
-                        cardGui.setClickedListener(new Poker.CardClickedListener() {
+                cardGui.setClickedListener(new Poker.CardClickedListener() {
                     @Override
                     public void onCardClicked() {
                         System.out.println("CardGui Clicked");
                         playerActionListener.onPlayerHit(currenSet);
                         cardGui.pauseMouseAdapter();
-                        
+
                         new Animation.expectantTaskManager(600, new Animation.expectantTaskManager.ExpectantTask() {
 
                             @Override
@@ -275,15 +275,15 @@ public class PlayPanel extends JPanel {
                     setBetValue();
                     setLeftValue();
                     playerActionListener.onPlayerDouble(currenSet);
-                    
-                    for(Poker poker: hands.get(index)) {
+
+                    for (Poker poker : hands.get(index)) {
                         poker.pauseMouseAdapter();
                     }
                     new Animation.expectantTaskManager(600, new Animation.expectantTaskManager.ExpectantTask() {
 
                         @Override
                         public void expectantTask() {
-                            for(Poker poker : hands.get(index)) {
+                            for (Poker poker : hands.get(index)) {
                                 poker.continueMouseAdapter();
                             }
                         }
@@ -296,14 +296,14 @@ public class PlayPanel extends JPanel {
                 public void onCardClicked() {
                     System.out.println("PlayerStandClicked" + currenSet);
                     playerActionListener.onPlayerStand(currenSet);
-                    for(Poker poker: hands.get(index)) {
+                    for (Poker poker : hands.get(index)) {
                         poker.pauseMouseAdapter();
                     }
                     new Animation.expectantTaskManager(600, new Animation.expectantTaskManager.ExpectantTask() {
 
                         @Override
                         public void expectantTask() {
-                            for(Poker poker : hands.get(index)) {
+                            for (Poker poker : hands.get(index)) {
                                 poker.continueMouseAdapter();
                             }
                         }
@@ -367,7 +367,7 @@ public class PlayPanel extends JPanel {
     private void setBetValue() {
         this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
-    
+
     public void setBetValue(int betNum) {
         this.totalBetValue = betNum;
         this.betValueLabel.setText(String.valueOf(totalBetValue));
@@ -375,8 +375,8 @@ public class PlayPanel extends JPanel {
 
     private void setMessageTags() {
         messageTags = new ArrayList<>(4);
-        ImageIcon imageBust = new ImageIcon("res/Bust.png");
-        ImageIcon imageBj = new ImageIcon("res/BlackJack.png");
+        ImageIcon imageBust = new ImageIcon(PlayPanel.class.getResource("/res/Bust.png"));
+        ImageIcon imageBj = new ImageIcon(PlayPanel.class.getResource("/res/BlackJack.png"));
         JLabel playerBust = new JLabel(imageBust);
         playerBust.setSize(100, 50);
         playerBust.setLocation(90, 250);

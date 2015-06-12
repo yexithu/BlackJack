@@ -51,7 +51,7 @@ public class BetPanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
+        ImageIcon backgroundImage = new ImageIcon(BetPanel.class.getResource("/res/betBackground.png"));
         g.drawImage(backgroundImage.getImage(), 0, 0, this);
         for (Token tableToken : tableTokens) {
             if (tableToken != null) {
@@ -169,14 +169,13 @@ public class BetPanel extends JPanel {
         this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
 
-    
     private void setValueLabels() {
         this.betValueLabel = new JLabel();
         betValueLabel.setSize(50, 25);
         betValueLabel.setLocation(550, 240);
         betValueLabel.setVisible(true);
         betValueLabel.setForeground(Color.WHITE);
-        betValueLabel.setFont(new   java.awt.Font("Dialog",   1,   18));   
+        betValueLabel.setFont(new java.awt.Font("Dialog", 1, 18));
         this.add(betValueLabel);
         setBetValue();
         this.leftValueLabel = new JLabel();
@@ -184,11 +183,11 @@ public class BetPanel extends JPanel {
         leftValueLabel.setLocation(550, 280);
         leftValueLabel.setVisible(true);
         leftValueLabel.setForeground(Color.WHITE);
-        leftValueLabel.setFont(new   java.awt.Font("Dialog",   1,   18));   
+        leftValueLabel.setFont(new java.awt.Font("Dialog", 1, 18));
         this.add(leftValueLabel);
         setLeftValue();
     }
-    
+
     public interface BetFinishedListener {
 
         void onBetFinished(int bet);

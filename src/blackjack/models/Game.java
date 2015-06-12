@@ -51,8 +51,6 @@ public class Game {
         for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
-        cards[0] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
-        cards[2] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
         Player.deal(cards[0]);
         Banker.deal(cards[1]);
         Player.deal(cards[2]);
@@ -307,7 +305,7 @@ public class Game {
         Results.add(State.NULL);
         Player.split();
         Player.changeCounter(-bet);
-        pool+=bet;
+        pool += bet;
         Card c = Deck.getCard();
         Player.deal(1, c);
         gameActionListener.onDeal(1, c);

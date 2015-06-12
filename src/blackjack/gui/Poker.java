@@ -38,7 +38,7 @@ public class Poker extends JLabel {
 
     static {
         try {
-            cardsBufferedImage = ImageIO.read(new FileInputStream("res/cards.png"));
+            cardsBufferedImage = ImageIO.read(Poker.class.getResource("/res/cards.png"));
         } catch (IOException ex) {
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
         }

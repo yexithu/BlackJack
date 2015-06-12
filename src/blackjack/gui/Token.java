@@ -37,7 +37,7 @@ public class Token extends JLabel {
 
     static {
         try {
-            tokensBufferedImage = ImageIO.read(new FileInputStream("res/tokens.png"));
+            tokensBufferedImage = ImageIO.read(Token.class.getResource("/res/tokens.png"));
         } catch (IOException ex) {
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
         }
