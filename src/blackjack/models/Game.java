@@ -65,17 +65,20 @@ public class Game {
                         gameActionListener.onBankerDisplayCard();
                         if (Player.isBJ()) {
                             Results.set(0, State.PUSH);
-                            gameActionListener.onShowResult(0, State.PUSH);
+                            result(0);
+//                            gameActionListener.onShowResult(0, State.PUSH);
                         } else {
                             gameActionListener.showTagMessage(1, 1);
                             Results.set(0, State.BANKER_WIN);
-                            gameActionListener.onShowResult(0, State.BANKER_WIN);
+                            result(0);
+//                            gameActionListener.onShowResult(0, State.BANKER_WIN);
                         }
                     }
                 } else if (Player.isBJ()) {
                     gameActionListener.showTagMessage(0, 1);
                     Results.set(0, State.PLAYER_WIN);
-                    gameActionListener.onShowResult(0, State.PLAYER_WIN);
+                    result(0);
+//                    gameActionListener.onShowResult(0, State.PLAYER_WIN);
                 } else {
                     //设置Choice Listener
                 }
@@ -94,12 +97,14 @@ public class Game {
             gameActionListener.showTagMessage(1, 0);
             if (Player.getHandNum() == 1) {
                 Results.set(0, State.PLAYER_WIN);
-                gameActionListener.onShowResult(0, State.PLAYER_WIN);
+                result(0);
+//                gameActionListener.onShowResult(0, State.PLAYER_WIN);
             } else {
-                for (int i = 1; i < 3; i++) {
-                    if (Results.get(i) == State.NULL) {
-                        Results.set(i, State.PLAYER_WIN);
-                        gameActionListener.onShowResult(i, State.PLAYER_WIN);
+                for (int index = 1; index < 3; index++) {
+                    if (Results.get(index) == State.NULL) {
+                        Results.set(index, State.PLAYER_WIN);
+                        result(index);
+//                        gameActionListener.onShowResult(i, State.PLAYER_WIN);
                     }
                 }
             }
@@ -162,7 +167,8 @@ public class Game {
             Player.deal(2, c);
             gameActionListener.onChangeSet(c);
         } else {
-            gameActionListener.onShowResult(index, State.BANKER_WIN);
+            result(index);
+//            gameActionListener.onShowResult(index, State.BANKER_WIN);
         }
     }
 
@@ -175,12 +181,14 @@ public class Game {
             bankerAct();
             if (Results.get(index) == State.NULL) {
                 Results.set(index, compare(index));
-                gameActionListener.onShowResult(index, Results.get(index));
+                result(index);
+//                gameActionListener.onShowResult(index, Results.get(index));
             }
             if (index == 2) {
                 if (Results.get(1) == State.NULL) {
                     Results.set(1, compare(1));
-                    gameActionListener.onShowResult(1, Results.get(1));
+                    result(1);
+//                    gameActionListener.onShowResult(1, Results.get(1));
                 }
             }
         }
@@ -198,11 +206,10 @@ public class Game {
         return result;
     }
 
-    public void result() {
+    public void result(int index) {
         try {
-            switch (Result) {
+            switch (Results.get(index)) {
                 case PLAYER_WIN:
-                    System.out.println("You Win!\n");
                     if (Player.isBJ()) {
                         Player.changeCounter((int) (pool * 2.5));
                     } else {
@@ -210,60 +217,23 @@ public class Game {
                     }
                     break;
                 case BANKER_WIN:
-                    System.out.println("You lose!\n");
                     if (Player.isInsure() && Banker.isBJ()) {
                         Player.changeCounter(pool / 2);
-                        System.out.println("Insurance paid!\n");
                     }
                     if (Player.isSurrender()) {
                         Player.changeCounter(pool / 2);
                     }
                     break;
                 case PUSH:
-                    System.out.println("Push!\n");
                     Player.changeCounter(pool);
                     break;
                 default:
                     throw new Exception();
             }
-            Player.showCounter();
-            Player.update(Result);
+            Player.update(Results.get(index));
+            gameActionListener.onShowResult(index, Results.get(index));
         } catch (Exception e) {
-            System.out.println("Unknown error!");
-        }
-    }
-
-    public void result(int i) {
-        try {
-            switch (Results.get(i)) {
-                case PLAYER_WIN:
-                    System.out.println("For your No." + i + " hand, you Win!\n");
-                    if (Player.isBJ()) {
-                        Player.changeCounter((int) (pool * 2.5));
-                    } else {
-                        Player.changeCounter(pool * 2);
-                    }
-                    break;
-                case BANKER_WIN:
-                    System.out.println("For your No." + i + " hand, you lose!\n");
-                    if (Player.isInsure() && Banker.isBJ()) {
-                        Player.changeCounter(pool / 2);
-                        System.out.println("Insurance paid!\n");
-                    }
-                    if (Player.isSurrender()) {
-                        Player.changeCounter(pool / 2);
-                    }
-                    break;
-                case PUSH:
-                    System.out.println("For your No." + i + " hand, push!\n");
-                    Player.changeCounter(pool);
-                    break;
-                default:
-                    throw new Exception();
-            }
-            Player.update(Result);
-        } catch (Exception e) {
-            System.out.println("Unknown error!");
+            gameActionListener.onShowMessageDialog("Unknown Error! Game State is NULL!");
         }
     }
 
@@ -283,12 +253,14 @@ public class Game {
                 bankerAct();
                 if (Results.get(index) == State.NULL) {
                     Results.set(index, compare(index));
-                    gameActionListener.onShowResult(index, Results.get(index));
+                    result(index);
+//                    gameActionListener.onShowResult(index, Results.get(index));
                 }
                 if (index == 2) {
                     if (Results.get(1) == State.NULL) {
                         Results.set(1, compare(1));
-                        gameActionListener.onShowResult(1, Results.get(1));
+                        result(1);
+//                        gameActionListener.onShowResult(1, Results.get(1));
                     }
                 }
             }
@@ -304,13 +276,15 @@ public class Game {
                 Player.deal(2, c);
                 gameActionListener.onChangeSet(c);
             } else {
-                gameActionListener.onShowResult(index, Results.get(index));
+                result(index);
+//                gameActionListener.onShowResult(index, Results.get(index));
                 if (index == 2) {
                     if (Results.get(1) == State.NULL) {
                         bankerAct();
                         if (Results.get(1) == State.NULL) {
                             Results.set(1, compare(1));
-                            gameActionListener.onShowResult(1, Results.get(1));
+                            result(1);
+//                            gameActionListener.onShowResult(1, Results.get(1));
                         }
                     }
                 }
@@ -338,7 +312,12 @@ public class Game {
     public void playerBust(int index) {
         gameActionListener.showTagMessage(0, 0);
         Results.set(index, State.BANKER_WIN);
-        gameActionListener.onShowResult(index, State.BANKER_WIN);
+        result(index);
+//        gameActionListener.onShowResult(index, State.BANKER_WIN);
+    }
+
+    public int getPlayerCounter() {
+        return Player.getCounter();
     }
 
     public void setGameActionListener(GameActionListener gameActionListener) {

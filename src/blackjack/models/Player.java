@@ -29,10 +29,6 @@ public class Player extends Hands {
         Surrender = false;
     }
 
-    public void showCounter() {
-        System.out.println("Your counter:$" + Counter);
-    }
-
     public int getCounter() {
         return Counter;
     }
