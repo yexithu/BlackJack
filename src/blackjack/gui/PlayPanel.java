@@ -8,6 +8,7 @@ package blackjack.gui;
 import static blackjack.gui.BetPanel.cardGui;
 import blackjack.models.Card;
 import blackjack.models.Game;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,7 +35,7 @@ public class PlayPanel extends JPanel {
     private PlayerActionListener playerActionListener;
     private boolean isSpilt;
     private int currenSet = 0;
-    private static Poker cardGui;
+    public static Poker cardGui;
     private int totalBetValue = 0;
     private int totalLeftValue = 0;
     private JLabel betValueLabel;
@@ -45,6 +46,7 @@ public class PlayPanel extends JPanel {
 
     public PlayPanel() {
         setLayout(null);
+        setValueLabels();
         setHandPokers();
         setDefaultCard();
         setSplitButton();
@@ -78,13 +80,8 @@ public class PlayPanel extends JPanel {
     private void setDefaultCard() {
         cardGui = new Poker(518, 4, new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT), true);
         cardGui.isCoverred = false;
+        
         add(cardGui);
-        cardGui.setClickedListener(new Poker.CardClickedListener() {
-            @Override
-            public void onCardClicked() {
-                playerActionListener.onPlayerHit(currenSet);
-            }
-        });
     }
 
     void initial(Card[] cards) {
@@ -111,19 +108,28 @@ public class PlayPanel extends JPanel {
                 }
             }
         });
-    }
+        new Animation.expectantTaskManager(midtime * 7, new Animation.expectantTaskManager.ExpectantTask() {
 
-    private void setLeftValue() {
-        this.leftValueLabel.setText(String.valueOf(totalLeftValue));
-    }
+            @Override
+            public void expectantTask() {
+                        cardGui.setClickedListener(new Poker.CardClickedListener() {
+                    @Override
+                    public void onCardClicked() {
+                        System.out.println("CardGui Clicked");
+                        playerActionListener.onPlayerHit(currenSet);
+                        cardGui.pauseMouseAdapter();
+                        
+                        new Animation.expectantTaskManager(600, new Animation.expectantTaskManager.ExpectantTask() {
 
-    public void setLeftValue(int value) {
-        this.totalLeftValue = value;
-        setLeftValue();
-    }
-
-    private void setBetValue() {
-        this.betValueLabel.setText(String.valueOf(totalBetValue));
+                            @Override
+                            public void expectantTask() {
+                                cardGui.continueMouseAdapter();
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     void setPlayerActionListener(PlayerActionListener playerActionListener) {
@@ -148,7 +154,6 @@ public class PlayPanel extends JPanel {
     }
 
     public void dealCard(int index, Card card, boolean toTurn) {
-        System.out.println("DealIndex" + index);
         Poker tempPoker = new Poker(Poker.defultX, Poker.defaultY, card, true);
         tempPoker.setClickedListener(getDealedCardListener(index));
         hands.get(index).add(0, tempPoker);
@@ -254,6 +259,7 @@ public class PlayPanel extends JPanel {
             return new Poker.CardClickedListener() {
                 @Override
                 public void onCardClicked() {
+                    System.out.println("BankerDoubleClicked" + currenSet);
                     playerActionListener.onPlayerDouble(currenSet);
                 }
             };
@@ -261,7 +267,7 @@ public class PlayPanel extends JPanel {
             return new Poker.CardClickedListener() {
                 @Override
                 public void onCardClicked() {
-                    System.out.println("PlayerClicked");
+                    System.out.println("PlayerStandClicked" + currenSet);
                     playerActionListener.onPlayerStand(currenSet);
                 }
             };
@@ -280,9 +286,47 @@ public class PlayPanel extends JPanel {
         for (Poker poker : hands.get(3 - currenSet)) {
             new Animation.PokerSpilt(this, poker, 1);
         }
-        for (Poker poker : hands.get(currenSet)) {
-            new Animation.PokerSpilt(this, poker, -1);
+        if (currenSet == 2) {
+            for (Poker poker : hands.get(currenSet)) {
+                new Animation.PokerSpilt(this, poker, 325, -50, -1);
+            }
+        } else {
+            for (Poker poker : hands.get(currenSet)) {
+                new Animation.PokerSpilt(this, poker, -1);
+            }
         }
+    }
+
+    private void setValueLabels() {
+        this.betValueLabel = new JLabel();
+        betValueLabel.setSize(50, 25);
+        betValueLabel.setLocation(550, 240);
+        betValueLabel.setVisible(true);
+        betValueLabel.setForeground(Color.WHITE);
+        betValueLabel.setFont(new java.awt.Font("Dialog", 1, 18));
+        this.add(betValueLabel);
+        setBetValue();
+        this.leftValueLabel = new JLabel();
+        leftValueLabel.setSize(50, 25);
+        leftValueLabel.setLocation(550, 280);
+        leftValueLabel.setVisible(true);
+        leftValueLabel.setForeground(Color.WHITE);
+        leftValueLabel.setFont(new java.awt.Font("Dialog", 1, 18));
+        this.add(leftValueLabel);
+        setLeftValue();
+    }
+
+    private void setLeftValue() {
+        this.leftValueLabel.setText(String.valueOf(totalLeftValue));
+    }
+
+    public void setLeftValue(int value) {
+        this.totalLeftValue = value;
+        setLeftValue();
+    }
+
+    private void setBetValue() {
+        this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
 
     private void setMessageTags() {

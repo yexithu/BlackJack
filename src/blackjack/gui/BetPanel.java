@@ -7,6 +7,7 @@ package blackjack.gui;
 
 import blackjack.models.Card;
 import blackjack.models.Game;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -36,13 +37,14 @@ public class BetPanel extends JPanel {
     static Hashtable<Integer, Token> defaultTokens = new Hashtable<>(6);
     static Poker cardGui;
     private int totalBetValue = 0;
-    private int totalLeftValue = 0;
+    private int totalLeftValue = 1000;
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
     private BetFinishedListener betFinishedListener;
 
     public BetPanel() {
         setLayout(null);
+        setValueLabels();
         setDefaultToken(this);
         setDefaultCard();
     }
@@ -90,7 +92,7 @@ public class BetPanel extends JPanel {
             defaultToken.setClickedListener(new Token.TokenClickedListener() {
                 @Override
                 public void onTokensClicked(int parValue) {
-                    if (totalBetValue + defaultToken.parValue <= 500) {
+                    if (totalLeftValue - defaultToken.parValue >= 0) {
                         createBetToken(defaultToken);
                     }
                 }
@@ -119,6 +121,8 @@ public class BetPanel extends JPanel {
             totalBetValue -= token.parValue;
             totalLeftValue += token.parValue;
             leftTokensNumber.replace(token.parValue, leftTokensNumber.get(token.parValue) + 1);
+            setBetValue();
+            setLeftValue();
         }
     }
 
@@ -133,6 +137,9 @@ public class BetPanel extends JPanel {
         tableTokens.add(0, addedToken.getToken());
         leftTokensNumber.replace(defaultToken.parValue, (leftTokensNumber.get(defaultToken.parValue) - 1));
         totalBetValue += defaultToken.parValue;
+        totalLeftValue -= defaultToken.parValue;
+        setBetValue();
+        setLeftValue();
         if ((int) leftTokensNumber.get(defaultToken.parValue) == 0) {
             defaultToken.setVisible(false);
             defaultToken.setEnabled(false);
@@ -162,6 +169,26 @@ public class BetPanel extends JPanel {
         this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
 
+    
+    private void setValueLabels() {
+        this.betValueLabel = new JLabel();
+        betValueLabel.setSize(50, 25);
+        betValueLabel.setLocation(550, 240);
+        betValueLabel.setVisible(true);
+        betValueLabel.setForeground(Color.WHITE);
+        betValueLabel.setFont(new   java.awt.Font("Dialog",   1,   18));   
+        this.add(betValueLabel);
+        setBetValue();
+        this.leftValueLabel = new JLabel();
+        leftValueLabel.setSize(50, 25);
+        leftValueLabel.setLocation(550, 280);
+        leftValueLabel.setVisible(true);
+        leftValueLabel.setForeground(Color.WHITE);
+        leftValueLabel.setFont(new   java.awt.Font("Dialog",   1,   18));   
+        this.add(leftValueLabel);
+        setLeftValue();
+    }
+    
     public interface BetFinishedListener {
 
         void onBetFinished(int bet);

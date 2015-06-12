@@ -89,8 +89,12 @@ public class Poker extends JLabel {
         this.addMouseListener(mouseAdapter);
     }
 
-    public void removeMouseAdapter() {
+    public void pauseMouseAdapter() {
         this.removeMouseListener(mouseAdapter);
+    }
+    
+    public void continueMouseAdapter() {
+        this.addMouseListener(mouseAdapter);
     }
 
     /*

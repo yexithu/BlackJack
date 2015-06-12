@@ -55,7 +55,7 @@ public class Game {
         Results.clear();
         Results.add(State.NULL);
         gameActionListener.onInitial(cards);
-        new Animation.expectantTaskManager(1500, new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(1200, new Animation.expectantTaskManager.ExpectantTask() {
             @Override
             public void expectantTask() {
                 if (Banker.isPeek()) {

@@ -25,11 +25,13 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         game = new Game("Martin");
-        setSize(656, 399);
+        setSize(646, 389);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setGame();
         setBetPanel();
-        //setPlayPanel();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setTitle("BlackJack");
         setVisible(true);
     }
 

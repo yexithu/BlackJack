@@ -43,8 +43,8 @@ public class Animation {
 
         @Override
         public void run() {
-            double rate = 1;
             token.pauseClickedListener();
+            double rate = 1;
 //            BetPanel.defaultTokens.get(token.parValue).pauseClickedListener();
             for (int i = 0; i < 3; ++i) {
                 rate += (maxScaleRate - 1) / 3;
@@ -110,6 +110,7 @@ public class Animation {
 
         @Override
         public void run() {
+            poker.pauseMouseAdapter();
             int perFrame = runTime / 10;
             double angle = 0;
             boolean originSide = poker.isBack;
@@ -128,6 +129,7 @@ public class Animation {
             }
             poker.setCardSize(Poker.width, Poker.height);
             poker.setLocation(centerX - poker.getWidth() / 2, centerY - poker.getHeight() / 2);
+            poker.continueMouseAdapter();
         }
     }
 
@@ -156,6 +158,7 @@ public class Animation {
 
         @Override
         public void run() {
+            poker.pauseMouseAdapter();
             int perFrame = turnRunTime / 10;
             double angle = 0;
             boolean originSide = poker.isBack;
@@ -183,6 +186,7 @@ public class Animation {
                 threadSleep(perFrame);
             }
             poker.setLocation(endX, endY);
+            poker.continueMouseAdapter();
         }
     }
 
@@ -210,6 +214,7 @@ public class Animation {
 
         @Override
         public void run() {
+            poker.pauseMouseAdapter();
             double rate = 1;
             for (int i = 0; i < 3; ++i) {
                 rate += (maxScaleRate - 1) / 3;
@@ -228,6 +233,7 @@ public class Animation {
                 threadSleep(runTime / 10);
             }
             poker.setLocation(endX, endY);
+            poker.continueMouseAdapter();
         }
     }
 
@@ -253,6 +259,7 @@ public class Animation {
 
         @Override
         public void run() {
+            poker.pauseMouseAdapter();
             int perFrame = runTime / 10;
             int centerX = poker.getX() + Poker.width / 2;
             int topX = poker.getX();
@@ -268,6 +275,7 @@ public class Animation {
             }
             poker.setCardSize(Poker.width, Poker.height);
             poker.setLocation(topX, topY);
+            poker.continueMouseAdapter();
         }
 
     }
@@ -297,17 +305,26 @@ public class Animation {
 
     public static class PokerSpilt implements Runnable {
 
-        static int offsetX = 300, offsetY = -50;
+        private int offsetX = 300, offsetY = -50;
         static int runTime = 300;
         static double maxScaleRate = 1.5;
         //1 远处 , -1 进出
-        int flag;
-        JPanel panel;
-        Poker poker;
+        private int flag;
+        final private JPanel panel;
+        private Poker poker;
 
         public PokerSpilt(JPanel panel, Poker poker, int flag) {
             this.panel = panel;
             this.poker = poker;
+            this.flag = flag;
+            new Thread(this).start();
+        }
+        
+         public PokerSpilt(JPanel panel, Poker poker, int offsetX, int offsetY, int flag) {
+            this.panel = panel;
+            this.poker = poker;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
             this.flag = flag;
             new Thread(this).start();
         }
@@ -331,6 +348,9 @@ public class Animation {
                 threadSleep(perFrame);
             }
             poker.setLocation(endX, endY);
+            if(flag == -1) {
+                poker.setCardSize(Poker.width, Poker.height);
+            }
         }
     }
 }
