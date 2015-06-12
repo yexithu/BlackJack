@@ -11,7 +11,9 @@ import blackjack.models.PlayerSet;
 import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -27,10 +29,12 @@ public class MainFrame extends JFrame {
     private PlayerPanel playerPanel;
     private PlayerSet playerSet;
     private int currentPlayerIndex = 0;
+
     public MainFrame() {
         game = new Game("Martin");
         playerSet = new PlayerSet();
         playerSet.readSet();
+
         System.out.println(playerSet.getSet().size());
         setSize(646, 389);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -56,6 +60,16 @@ public class MainFrame extends JFrame {
                 repaint();
                 setPlayPanel(betNum);
                 game.initial();
+            }
+        });
+
+        betPanel.setOnExitListener(new ChildPanel.ExitClickedListener() {
+
+            @Override
+            public void onExitClicked() {
+                remove(betPanel);
+                setMenuPanel();
+                paintComponents(getGraphics());
             }
         });
     }
@@ -105,6 +119,16 @@ public class MainFrame extends JFrame {
                 remove(playPanel);
                 repaint();
                 setBetPanel();
+            }
+        });
+
+        playPanel.setOnExitListener(new ChildPanel.ExitClickedListener() {
+
+            @Override
+            public void onExitClicked() {
+                remove(playPanel);
+                setMenuPanel();
+                paintComponents(getGraphics());
             }
         });
     }
@@ -169,7 +193,6 @@ public class MainFrame extends JFrame {
         menuPanel = new MenuPanel();
         menuPanel.setVisible(true);
         add(menuPanel);
-
         paintComponents(getGraphics());
         menuPanel.setMainMenuListeners(new MenuPanel.MainMenuClickedListener() {
 
@@ -185,9 +208,8 @@ public class MainFrame extends JFrame {
             @Override
             public void onPlayer() {
                 remove(menuPanel);
-                playerPanel = new PlayerPanel(playerSet.getSet());
-                add(playerPanel);
-                paintComponents(getGraphics());
+                setPlayerPanel();
+
             }
 
             @Override
@@ -201,5 +223,24 @@ public class MainFrame extends JFrame {
             }
         });
         paintComponents(getGraphics());
+
+    }
+
+    private void setPlayerPanel() {
+        playerPanel = new PlayerPanel(playerSet.getSet());
+        add(playerPanel);
+        paintComponents(getGraphics());
+        
+        playerPanel.setOnExitListener(new ChildPanel.ExitClickedListener() {
+
+            @Override
+            public void onExitClicked() {
+                currentPlayerIndex = playerPanel.getIndex();
+                playerSet.setSet(playerPanel.getPlayers());
+                remove(playerPanel);
+                setMenuPanel();
+                paintComponents(getGraphics());
+            }
+        });
     }
 }

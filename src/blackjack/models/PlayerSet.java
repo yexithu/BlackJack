@@ -58,4 +58,8 @@ public class PlayerSet {
     public ArrayList<Player> getSet() {
         return set;
     }
+    
+    public void setSet(ArrayList<Player> players) {
+        this.set = players;
+    }
 }

@@ -29,7 +29,7 @@ import javax.swing.OverlayLayout;
  *
  * @author Re
  */
-public class BetPanel extends JPanel {
+public class BetPanel extends ChildPanel {
 
     static public ArrayList<Token> tableTokens;
     static Hashtable<Integer, Integer> leftTokensNumber = new Hashtable<>(6);

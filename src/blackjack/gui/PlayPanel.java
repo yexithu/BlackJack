@@ -24,7 +24,7 @@ import javax.swing.JPanel;
  *
  * @author Re
  */
-public class PlayPanel extends JPanel {
+public class PlayPanel extends ChildPanel {
 
     private ArrayList<Poker> playerDefaultHands;
     private ArrayList<Poker> bankerHands;

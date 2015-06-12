@@ -152,4 +152,15 @@ public class Player extends Hands implements Serializable {
     public String getName() {
         return this.Name;
     }
+    
+    public String getHtmlString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<html>" + "玩家名: ").append(Name).append("<br/>");
+        stringBuilder.append("资产: ").append(String.valueOf(this.Counter)).append("<br/>");
+        stringBuilder.append("游戏局数: " ).append(String.valueOf(this.DealCount)).append("<br/>");
+        stringBuilder.append("胜利局数: ").append(String.valueOf(this.Win)).append("<br/>");
+        stringBuilder.append("平局数: ").append(String.valueOf(this.Push)).append("<br/>");
+        stringBuilder.append("失败局数: ").append(String.valueOf(this.Lose)).append("<br/>").append("</html>");
+        return stringBuilder.toString();
+    }
 }
