@@ -16,6 +16,13 @@ import java.util.ArrayList;
 //游戏过程的抽象表示
 public class Game {
 
+    /**
+     * @return the pool
+     */
+    public int getPool() {
+        return pool;
+    }
+
     //代表游戏结果的枚举类型
     public static enum State {
 
@@ -52,8 +59,6 @@ public class Game {
         Banker.deal(cards[3]);
         Player.setBJ();
         Banker.setBJ();
-        Banker.displayFirstCard();
-        Player.display();
         Results.clear();
         Results.add(State.NULL);
         gameActionListener.onInitial(cards);
@@ -88,6 +93,18 @@ public class Game {
         });
     }
 
+    public void refresh() {
+        Result = State.NULL;
+        Player.clear();
+        Banker.clear();
+        Player.setInsure(false);
+        Player.setSurrender(false);
+        Player.setSplit(false);
+        Player.setBJ(false);
+        Banker.setBJ(false);
+        pool = 0;
+    }
+
     private void bankerAct() {
         gameActionListener.onBankerDisplayCard();
         while (!Banker.isBust() && Banker.continueHit()) {
@@ -99,30 +116,16 @@ public class Game {
             gameActionListener.showTagMessage(1, 0);
             if (Player.getHandNum() == 1) {
                 Results.set(0, State.PLAYER_WIN);
-                result(0);
-//                gameActionListener.onShowResult(0, State.PLAYER_WIN);
+//                result(0);
             } else {
                 for (int index = 1; index < 3; index++) {
                     if (Results.get(index) == State.NULL) {
                         Results.set(index, State.PLAYER_WIN);
-                        result(index);
-//                        gameActionListener.onShowResult(i, State.PLAYER_WIN);
                     }
+//                    result(index);
                 }
             }
         }
-    }
-
-    public void refresh() {
-        Result = State.NULL;
-        Player.clear();
-        Banker.clear();
-        Player.setInsure(false);
-        Player.setSurrender(false);
-        Player.setSplit(false);
-        Player.setBJ(false);
-        Banker.setBJ(false);
-        pool = 0;
     }
 
     public boolean isShuffle() {
@@ -150,7 +153,7 @@ public class Game {
     }
 
     public void playerInsure() {
-        Player.changeCounter(-pool / 2);
+        Player.changeCounter(-getPool() / 2);
         Player.setInsure(true);
     }
 
@@ -170,7 +173,6 @@ public class Game {
             gameActionListener.onChangeSet(c);
         } else {
             result(index);
-//            gameActionListener.onShowResult(index, State.BANKER_WIN);
         }
     }
 
@@ -183,15 +185,13 @@ public class Game {
             bankerAct();
             if (Results.get(index) == State.NULL) {
                 Results.set(index, compare(index));
-                result(index);
-//                gameActionListener.onShowResult(index, Results.get(index));
             }
+            result(index);
             if (index == 2) {
                 if (Results.get(1) == State.NULL) {
                     Results.set(1, compare(1));
-                    result(1);
-//                    gameActionListener.onShowResult(1, Results.get(1));
                 }
+                result(1);
             }
         }
     }
@@ -213,21 +213,21 @@ public class Game {
             switch (Results.get(index)) {
                 case PLAYER_WIN:
                     if (Player.isBJ()) {
-                        Player.changeCounter((int) (pool * 2.5));
+                        Player.changeCounter((int) (getPool() * 2.5));
                     } else {
-                        Player.changeCounter(pool * 2);
+                        Player.changeCounter(getPool() * 2);
                     }
                     break;
                 case BANKER_WIN:
                     if (Player.isInsure() && Banker.isBJ()) {
-                        Player.changeCounter(pool / 2);
+                        Player.changeCounter(getPool() / 2);
                     }
                     if (Player.isSurrender()) {
-                        Player.changeCounter(pool / 2);
+                        Player.changeCounter(getPool() / 2);
                     }
                     break;
                 case PUSH:
-                    Player.changeCounter(pool);
+                    Player.changeCounter(getPool());
                     break;
                 default:
                     throw new Exception();
@@ -255,15 +255,13 @@ public class Game {
                 bankerAct();
                 if (Results.get(index) == State.NULL) {
                     Results.set(index, compare(index));
-                    result(index);
-//                    gameActionListener.onShowResult(index, Results.get(index));
                 }
+                result(index);
                 if (index == 2) {
                     if (Results.get(1) == State.NULL) {
                         Results.set(1, compare(1));
-                        result(1);
-//                        gameActionListener.onShowResult(1, Results.get(1));
                     }
+                    result(1);
                 }
             }
         }
@@ -279,28 +277,26 @@ public class Game {
                     @Override
                     public void expectantTask() {
                         Card c = Deck.getCard();
-                gameActionListener.onChangeSet(c);
-                new Animation.expectantTaskManager(300, new Animation.expectantTaskManager.ExpectantTask() {
+                        gameActionListener.onChangeSet(c);
+                        new Animation.expectantTaskManager(300, new Animation.expectantTaskManager.ExpectantTask() {
 
-                    @Override
-                    public void expectantTask() {
-                        Player.deal(2, c);
-                    }
-                });
+                            @Override
+                            public void expectantTask() {
+                                Player.deal(2, c);
+                            }
+                        });
                     }
                 });
             } else {
                 result(index);
-//                gameActionListener.onShowResult(index, Results.get(index));
                 if (index == 2) {
                     if (Results.get(1) == State.NULL) {
                         bankerAct();
                         if (Results.get(1) == State.NULL) {
                             Results.set(1, compare(1));
-                            result(1);
-//                            gameActionListener.onShowResult(1, Results.get(1));
                         }
                     }
+                    result(1);
                 }
             }
         }
@@ -310,6 +306,8 @@ public class Game {
         Results.add(State.NULL);
         Results.add(State.NULL);
         Player.split();
+        Player.changeCounter(-bet);
+        pool+=bet;
         Card c = Deck.getCard();
         Player.deal(1, c);
         gameActionListener.onDeal(1, c);
