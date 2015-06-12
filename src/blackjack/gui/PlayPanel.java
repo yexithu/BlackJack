@@ -261,6 +261,19 @@ public class PlayPanel extends JPanel {
                 public void onCardClicked() {
                     System.out.println("BankerDoubleClicked" + currenSet);
                     playerActionListener.onPlayerDouble(currenSet);
+                    
+                    for(Poker poker: hands.get(index)) {
+                        poker.pauseMouseAdapter();
+                    }
+                    new Animation.expectantTaskManager(600, new Animation.expectantTaskManager.ExpectantTask() {
+
+                        @Override
+                        public void expectantTask() {
+                            for(Poker poker : hands.get(index)) {
+                                poker.continueMouseAdapter();
+                            }
+                        }
+                    });
                 }
             };
         } else {
@@ -269,6 +282,18 @@ public class PlayPanel extends JPanel {
                 public void onCardClicked() {
                     System.out.println("PlayerStandClicked" + currenSet);
                     playerActionListener.onPlayerStand(currenSet);
+                    for(Poker poker: hands.get(index)) {
+                        poker.pauseMouseAdapter();
+                    }
+                    new Animation.expectantTaskManager(600, new Animation.expectantTaskManager.ExpectantTask() {
+
+                        @Override
+                        public void expectantTask() {
+                            for(Poker poker : hands.get(index)) {
+                                poker.continueMouseAdapter();
+                            }
+                        }
+                    });
                 }
             };
         }
