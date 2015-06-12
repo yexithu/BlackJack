@@ -33,7 +33,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setTitle("BlackJack");
         setVisible(true);
-
+        
         setMenuPanel();
     }
 
@@ -160,12 +160,12 @@ public class MainFrame extends JFrame {
             }
         });
     }
-
+    
     private void setMenuPanel() {
         menuPanel = new MenuPanel();
         menuPanel.setVisible(true);
         add(menuPanel);
-
+        
         paintComponents(getGraphics());
         menuPanel.setMainMenuListeners(new MenuPanel.MainMenuClickedListener() {
 
@@ -192,6 +192,6 @@ public class MainFrame extends JFrame {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        paintComponents(getGraphics());
+         paintComponents(getGraphics());
     }
 }
