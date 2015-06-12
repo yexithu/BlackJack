@@ -41,7 +41,8 @@ public class BetPanel extends JPanel {
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
     private BetFinishedListener betFinishedListener;
-    static ImageIcon backgroundImage = new ImageIcon("res/betBackground.png");
+    static ImageIcon backgroundImage = new ImageIcon(BetPanel.class.getResource("res/betBackground.png"));
+
     public BetPanel() {
         setLayout(null);
         setValueLabels();
