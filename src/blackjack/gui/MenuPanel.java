@@ -89,7 +89,7 @@ public class MenuPanel extends JPanel {
         playerLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
-                mainMenuClickedListener.onStart();
+                mainMenuClickedListener.onPlayer();
             }
         });
         aboutLabel.addMouseListener(new MouseAdapter() {

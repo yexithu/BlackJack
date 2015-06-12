@@ -71,21 +71,19 @@ public class Game {
                         if (Player.isBJ()) {
                             Results.set(0, State.PUSH);
                             result(0);
-//                            gameActionListener.onShowResult(0, State.PUSH);
                         } else {
                             gameActionListener.showTagMessage(1, 1);
                             Results.set(0, State.BANKER_WIN);
                             result(0);
-//                            gameActionListener.onShowResult(0, State.BANKER_WIN);
                         }
                     }
-                } else if (Player.isBJ()) {
-                    gameActionListener.showTagMessage(0, 1);
-                    Results.set(0, State.PLAYER_WIN);
-                    result(0);
-//                    gameActionListener.onShowResult(0, State.PLAYER_WIN);
-                } else {
-                    //设置Choice Listener
+                }
+                if (Results.get(0) == State.NULL) {
+                    if (Player.isBJ()) {
+                        gameActionListener.showTagMessage(0, 1);
+                        Results.set(0, State.PLAYER_WIN);
+                        result(0);
+                    }
                 }
             }
         });
@@ -131,6 +129,7 @@ public class Game {
     public void shuffle() {
         if (isShuffle()) {
             Deck.shuffle();
+            gameActionListener.onShowMessageDialog("The Deck Has Been Shuffled!");
             if (Setting.getBurnCardNum() > 0) {
                 burn();
             }

@@ -15,7 +15,7 @@ public class Card implements Cloneable {
     //表示花色的枚举类型
     public static enum Pattern {
 
-        SPADE("S", 3), HEART("H", 0), PLAM("P", 1), DIAMOND("D", 2);
+        SPADE("S", 3), HEART("H", 0), CLUB("P", 1), DIAMOND("D", 2);
         public final String Name;
         public final int index;
 
