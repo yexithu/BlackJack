@@ -95,7 +95,6 @@ public class Game {
         Banker.clear();
         Player.setInsure(false);
         Player.setSurrender(false);
-        Player.setSplit(false);
         Player.setBJ(false);
         Banker.setBJ(false);
         pool = 0;

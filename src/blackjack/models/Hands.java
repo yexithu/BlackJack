@@ -42,19 +42,7 @@ public class Hands {
         HandArray.get(i).deal(c);
     }
 
-    public void display(int i) {
-        System.out.println("Now displaying No." + (i + 1) + " hand:");
-        HandArray.get(i).display();
-    }
-
     //进行分牌操作
-    public void split(int i, Card c1, Card c2) { //c1,c2新发的两张牌
-        HandArray.add(i + 1, new Hand());//在手牌堆中新建一个手牌对象
-        deal(i + 1, HandArray.get(i).deleteLast(i));//在第i副手牌中删除最后一张牌，置入第i+1副手牌中
-        deal(i, c1);//在第i副手牌中发一张新牌
-        deal(i + 1, c2);//在第i+1副手牌中发一张新牌
-    }
-
     public void split() {
         HandArray.add(new Hand());
         HandArray.add(new Hand());

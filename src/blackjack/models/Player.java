@@ -5,7 +5,6 @@
  */
 package blackjack.models;
 
-import blackjack.util.ConsoleScanner;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -114,32 +113,6 @@ public class Player extends Hands implements Serializable {
         }
     }
 
-    //询问用户是否分牌
-    @Override
-    public boolean isSplit(int i) {
-        if (super.isSplit(i)) {
-            display(i);
-            System.out.println("Do you want to split this hand?Y/N");
-            return ConsoleScanner.getYorN();
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @return the Split
-     */
-    public boolean isSplit() {
-        return Split;
-    }
-
-    /**
-     * @param Split the Split to set
-     */
-    public void setSplit(boolean Split) {
-        this.Split = Split;
-    }
-
     public boolean isBJ() {
         return HandArray.get(0).isBJ();
     }
@@ -167,11 +140,6 @@ public class Player extends Hands implements Serializable {
     public void clear() {
         HandArray = new ArrayList();
         HandArray.add(new Hand());
-    }
-
-    public void display() {
-        System.out.println("\nYou get:");
-        HandArray.get(0).display();
     }
 
     /**

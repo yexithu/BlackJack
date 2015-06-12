@@ -12,18 +12,6 @@ package blackjack.models;
 //庄家的抽象表示
 public class Banker extends Hand {
 
-    @Override
-    public void display() {
-        System.out.println("\nBanker get:");
-        super.display();
-    }
-
-    @Override
-    public void displayFirstCard() {
-        System.out.println("\nBanker get:");
-        super.displayFirstCard();
-    }
-
     //根据庄家的明牌判断庄家是否要进行偷窥
     public boolean isPeek() {
         return getFirstCard() == 1 || getFirstCard() == 10;

@@ -69,24 +69,6 @@ public class Hand implements Cloneable {
         Cards.add(c);
     }
 
-    //删除最后一张手牌（分牌用）
-    public Card deleteLast(int n) {
-        return Cards.remove(Cards.size() - 1);
-    }
-
-    //显示手牌
-    public void display() {
-        for (Card c : Cards) {
-            System.out.println(c);
-        }
-        System.out.println("\nThe value of this hand: " + getTotal() + "\n");
-    }
-
-    //显示第一张手牌
-    public void displayFirstCard() {
-        System.out.println(Cards.get(0) + "\n");
-    }
-
     //判断手牌能否分牌
     public boolean canSplit() {
         return Cards.get(0).equals(Cards.get(1));
