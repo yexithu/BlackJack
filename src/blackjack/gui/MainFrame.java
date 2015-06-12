@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 public class MainFrame extends JFrame {
 
     public static Game game;
+    private MenuPanel menuPanel;
     private BetPanel betPanel;
     private PlayPanel playPanel;
 
@@ -27,12 +28,13 @@ public class MainFrame extends JFrame {
         game = new Game("Martin");
         setSize(646, 389);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setGame();
-        setBetPanel();
+
         setResizable(false);
         setLocationRelativeTo(null);
         setTitle("BlackJack");
         setVisible(true);
+        
+        setMenuPanel();
     }
 
     private void setBetPanel() {
@@ -157,5 +159,39 @@ public class MainFrame extends JFrame {
                 playPanel.dealCard(2, c, true);
             }
         });
+    }
+    
+    private void setMenuPanel() {
+        menuPanel = new MenuPanel();
+        menuPanel.setVisible(true);
+        add(menuPanel);
+        
+        paintComponents(getGraphics());
+        menuPanel.setMainMenuListeners(new MenuPanel.MainMenuClickedListener() {
+
+            @Override
+            public void onStart() {
+                remove(menuPanel);
+                paintComponents(getGraphics());
+                setGame();
+                setBetPanel();
+            }
+
+            @Override
+            public void onPlayer() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void onHelp() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void onAbout() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+         paintComponents(getGraphics());
     }
 }
