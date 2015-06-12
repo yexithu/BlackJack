@@ -189,6 +189,10 @@ public class PlayPanel extends JPanel {
 
         int result = JOptionPane.showConfirmDialog(this, "Take Insurerance?");
         if (result == JOptionPane.YES_OPTION) {
+            this.totalLeftValue -= this.totalBetValue / 2;
+            this.totalBetValue += this.totalBetValue / 2;
+            this.setBetValue();
+            this.setLeftValue();
             playerActionListener.onPlayerTakeInsure();
         }
     }
@@ -236,6 +240,12 @@ public class PlayPanel extends JPanel {
 
     private void playerSplit() {
         changeSplitButtonState();
+        System.out.println("ToTalBetValue" + totalBetValue);
+        System.out.println("ToTalLeftValue" + totalLeftValue);
+        this.totalLeftValue -= this.totalBetValue;
+        this.totalBetValue += this.totalBetValue;
+        this.setBetValue();
+        this.setLeftValue();
         currenSet = 1;
         hands.get(1).add(hands.get(0).get(1));
         hands.get(2).add(hands.get(0).get(0));
@@ -260,6 +270,10 @@ public class PlayPanel extends JPanel {
                 @Override
                 public void onCardClicked() {
                     System.out.println("BankerDoubleClicked" + currenSet);
+                    totalLeftValue -= totalBetValue;
+                    totalBetValue += totalBetValue;
+                    setBetValue();
+                    setLeftValue();
                     playerActionListener.onPlayerDouble(currenSet);
                     
                     for(Poker poker: hands.get(index)) {
@@ -351,6 +365,11 @@ public class PlayPanel extends JPanel {
     }
 
     private void setBetValue() {
+        this.betValueLabel.setText(String.valueOf(totalBetValue));
+    }
+    
+    public void setBetValue(int betNum) {
+        this.totalBetValue = betNum;
         this.betValueLabel.setText(String.valueOf(totalBetValue));
     }
 

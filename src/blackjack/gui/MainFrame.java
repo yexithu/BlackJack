@@ -37,6 +37,7 @@ public class MainFrame extends JFrame {
 
     private void setBetPanel() {
         betPanel = new BetPanel();
+        betPanel.setLeftValue(game.getPlayerCounter());
         add(betPanel);
         paintComponents(getGraphics());
         betPanel.setBetFinishedListener(new BetPanel.BetFinishedListener() {
@@ -47,14 +48,16 @@ public class MainFrame extends JFrame {
                 game.bet(betNum);
                 remove(betPanel);
                 repaint();
-                setPlayPanel();
+                setPlayPanel(betNum);
                 game.initial();
             }
         });
     }
 
-    private void setPlayPanel() {
+    private void setPlayPanel(int betNum) {
         playPanel = new PlayPanel();
+        playPanel.setBetValue(betNum);
+        playPanel.setLeftValue(game.getPlayerCounter());
         add(playPanel);
         paintComponents(getGraphics());
 
