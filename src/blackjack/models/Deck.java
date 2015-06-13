@@ -43,7 +43,7 @@ public class Deck {
         return Count > Num * 52 * Penetration;
     }
 
-    //洗牌堆
+    //洗牌
     public void shuffle() {
         Count = 0;//重置发牌计数器
         Collections.shuffle(Cards);
@@ -54,7 +54,7 @@ public class Deck {
         Count += BurnCardNum;
     }
 
-    //模拟从牌堆顶获取一张牌
+    //从牌堆顶获取一张牌
     public Card getCard() {
         return Cards.get(Count++);//发牌后计数器+1
     }
