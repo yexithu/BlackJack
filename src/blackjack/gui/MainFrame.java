@@ -32,7 +32,6 @@ public class MainFrame extends JFrame {
         JFrame temp = this;
         playerSet = new PlayerSet();
         setSize(650, 400);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMenuPanel();
         setResizable(false);
         setLocationRelativeTo(null);
@@ -57,13 +56,17 @@ public class MainFrame extends JFrame {
         betPanel.setBetFinishedListener(new BetPanel.BetFinishedListener() {
             @Override
             public void onBetFinished(int betNum) {
-                game.refresh();//重置游戏状态，新开一局游戏
-                game.shuffle();//洗牌
-                game.bet(betNum);
-                remove(betPanel);
-                repaint();
-                setPlayPanel(betNum);
-                game.initial();
+                if (game.checkBet(betNum)) {
+                    game.refresh();//重置游戏状态，新开一局游戏
+                    game.shuffle();//洗牌
+                    game.bet(betNum);
+                    remove(betPanel);
+                    repaint();
+                    setPlayPanel(betNum);
+                    game.initial();
+                } else {
+                    JOptionPane.showMessageDialog(betPanel, "Bet Limit: " + game.getBetMin() + " - " + game.getBetMax(), "提示", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 

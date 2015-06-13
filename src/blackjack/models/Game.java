@@ -174,6 +174,10 @@ public class Game {
         Deck.burn(i);
     }
 
+    public boolean checkBet(int betNum) {
+        return !(betNum < Setting.getBetMin() || betNum > Setting.getBetMax());
+    }
+
     public void bet(int betNum) {
         Player.changeCounter(-betNum);
         bet = betNum;
@@ -365,6 +369,14 @@ public class Game {
 
     public int getPlayerCounter() {
         return Player.getCounter();
+    }
+
+    public int getBetMax() {
+        return Setting.getBetMax();
+    }
+
+    public int getBetMin() {
+        return Setting.getBetMin();
     }
 
     public void save() {
