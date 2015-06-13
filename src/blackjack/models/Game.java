@@ -49,6 +49,8 @@ public class Game {
         for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
+        cards[0] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
+        cards[2] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
         Player.deal(cards[0]);
         Banker.deal(cards[1]);
         Player.deal(cards[2]);
@@ -239,10 +241,14 @@ public class Game {
         Card c = Deck.getCard();
         gameActionListener.onDouble(index, c);
         Player.deal(index, c);
-        playerBustControl(index);
+        new Animation.expectantTaskManager(700,new Animation.expectantTaskManager.ExpectantTask() {
+
+            @Override
+            public void expectantTask() {
+            playerBustControl(index);
         if (Results.get(index) == State.NULL) {
             if (index == 1) {
-                c = Deck.getCard();
+                Card c = Deck.getCard();
                 Player.deal(2, c);
                 gameActionListener.onChangeSet(c);
             } else {
@@ -259,6 +265,9 @@ public class Game {
                 }
             }
         }
+            }
+        });
+        
     }
 
     private void playerBustControl(int index) {
