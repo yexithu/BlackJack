@@ -6,7 +6,9 @@
 package blackjack.models;
 
 import blackjack.gui.Animation;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  * @author Martin
@@ -26,7 +28,7 @@ public class Game {
 
         NULL, PLAYER_WIN, BANKER_WIN, PUSH;
     }
-    private final Player Player;
+    private Player Player;
     private final Banker Banker;
     private final Deck Deck;
     private final Setting Setting;
@@ -35,13 +37,50 @@ public class Game {
     private int pool, bet;//pool：赌池，bet：赌注
     private GameActionListener gameActionListener;
 
-    public Game(String Name) {
-        Player = new Player(Name);
+//    public Game(String Name) {
+//        Player = new Player(Name);
+//        Banker = new Banker();
+//        Setting = blackjack.models.Setting.example();
+//        Deck = new Deck(Setting.getDeckNum());
+//        Results = new ArrayList();
+//        Deck.shuffle();//第一次运行前先洗牌
+//    }
+    public Game() {
+        Player = null;
         Banker = new Banker();
         Setting = blackjack.models.Setting.example();
         Deck = new Deck(Setting.getDeckNum());
         Results = new ArrayList();
         Deck.shuffle();//第一次运行前先洗牌
+    }
+
+    public boolean setPlayer(int index) {
+        boolean flag = true;
+        Player = PlayerSet.readPlayer(index);
+        if (Player.getName() == null) {
+            String newName;
+            while (true) {
+                try {
+                    newName = JOptionPane.showInputDialog("检测到您未设置账户，请输入新账户名字");
+                    if (newName != null) {
+                        if (newName.length() == 0) {
+                            JOptionPane.showMessageDialog(null, "输入为空", "不合法的输入", JOptionPane.WARNING_MESSAGE);
+                        } else if (newName.length() > 10) {
+                            JOptionPane.showMessageDialog(null, "名字长度不能超过10", "不合法的输入", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            break;
+                        }
+                    } else {
+                        flag = false;
+                        break;
+                    }
+                } catch (HeadlessException e) {
+                    JOptionPane.showMessageDialog(null, "名字包含不可用的字符", "不合法的输入", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            Player = new Player(newName, index);
+        }
+        return flag;
     }
 
     public void initial() {
@@ -241,33 +280,33 @@ public class Game {
         Card c = Deck.getCard();
         gameActionListener.onDouble(index, c);
         Player.deal(index, c);
-        new Animation.expectantTaskManager(700,new Animation.expectantTaskManager.ExpectantTask() {
+        new Animation.expectantTaskManager(700, new Animation.expectantTaskManager.ExpectantTask() {
 
             @Override
             public void expectantTask() {
-            playerBustControl(index);
-        if (Results.get(index) == State.NULL) {
-            if (index == 1) {
-                Card c = Deck.getCard();
-                Player.deal(2, c);
-                gameActionListener.onChangeSet(c);
-            } else {
-                bankerAct();
+                playerBustControl(index);
                 if (Results.get(index) == State.NULL) {
-                    Results.set(index, compare(index));
-                }
-                result(index);
-                if (index == 2) {
-                    if (Results.get(1) == State.NULL) {
-                        Results.set(1, compare(1));
+                    if (index == 1) {
+                        Card c = Deck.getCard();
+                        Player.deal(2, c);
+                        gameActionListener.onChangeSet(c);
+                    } else {
+                        bankerAct();
+                        if (Results.get(index) == State.NULL) {
+                            Results.set(index, compare(index));
+                        }
+                        result(index);
+                        if (index == 2) {
+                            if (Results.get(1) == State.NULL) {
+                                Results.set(1, compare(1));
+                            }
+                            result(1);
+                        }
                     }
-                    result(1);
                 }
-            }
-        }
             }
         });
-        
+
     }
 
     private void playerBustControl(int index) {
@@ -333,6 +372,10 @@ public class Game {
 
     public int getPlayerCounter() {
         return Player.getCounter();
+    }
+
+    public void save() {
+        PlayerSet.writePlayer(Player);
     }
 
     public void setGameActionListener(GameActionListener gameActionListener) {

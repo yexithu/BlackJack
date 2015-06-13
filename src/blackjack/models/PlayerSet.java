@@ -18,48 +18,86 @@ public class PlayerSet {
 
     public PlayerSet() {
         set = new ArrayList();
-        for (int index = 1; index < 5; index++) {
-            set.add(new Player(index));
+        initialSet();
+    }
+
+    public void initialSet() {
+        for (int index = 0; index < 4; index++) {
+            File file = new File("res/player" + index + ".txt");
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                writePlayer(new Player(index));
+            }
         }
     }
 
     public void writeSet() {
-        for (Player p : getSet()) {
+        for (Player p : set) {
+            File file = new File("res/player" + p.getIndex() + ".txt");
             try {
-                File file = new File("res/player" + p.getIndex() + ".txt");
-                file.createNewFile();
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+                out.writeObject(p);
             } catch (FileNotFoundException e) {
-
+                System.out.println("Player File Not Found!");
             } catch (IOException e) {
-
+                System.out.println("Unknown IO Error!");
             }
         }
     }
 
     public void readSet() {
-        getSet().clear();
-        try {
-            for (int index = 1; index < 5; index++) {
-                File file = new File("res/player" + index + ".txt");
+        set.clear();
+        for (int index = 0; index < 4; index++) {
+            File file = new File("res/player" + index + ".txt");
+            try {
                 ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-                getSet().add((Player) in.readObject());
+                set.add((Player) in.readObject());
+            } catch (FileNotFoundException e) {
+                System.out.println("Player File Not Found!");
+            } catch (IOException e) {
+                System.out.println("Unknown IO Error!");
+            } catch (ClassNotFoundException e) {
+                System.out.println("Player File Corrupted!");
             }
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException | ClassNotFoundException e) {
-            
         }
+    }
+
+    public static void writePlayer(Player p) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("res/player" + p.getIndex() + ".txt"));
+            out.writeObject(p);
+        } catch (FileNotFoundException e) {
+            System.out.println("Player File Not Found!");
+        } catch (IOException e) {
+            System.out.println("Unknown IO Error!");
+        }
+    }
+
+    public static Player readPlayer(int index) {
+        Player p = new Player(index);
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("res/player" + index + ".txt"));
+            p = (Player) in.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Player File Not Found!");
+        } catch (IOException e) {
+            System.out.println("Unknown IO Error!");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Player File Corrupted!");
+        }
+        return p;
     }
 
     /**
      * @return the set
      */
     public ArrayList<Player> getSet() {
+        readSet();
         return set;
     }
-    
+
     public void setSet(ArrayList<Player> players) {
         this.set = players;
+        writeSet();
     }
 }

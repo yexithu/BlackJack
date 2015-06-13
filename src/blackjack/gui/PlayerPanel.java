@@ -57,11 +57,11 @@ public class PlayerPanel extends ChildPanel {
 
     private void setPlayerTags(ArrayList<Player> players) {
         playerTags = new ArrayList<>(4);
-        players = new ArrayList<>(4);
+//        players = new ArrayList<>(4);
 
-        for (int i = 0; i < 4; ++i) {
-            players.add(new Player(i));
-        }
+//        for (int i = 0; i < 4; ++i) {
+//            players.add(new Player(i));
+//        }
         this.players = players;
         for (int i = 0; i < 4; ++i) {
             WhiteBorderLabel playTag = new WhiteBorderLabel(150, 50);
@@ -143,7 +143,7 @@ public class PlayerPanel extends ChildPanel {
                 }
 
                 if (newName != null) {
-                    players.set(currentIndex, new Player(newName));
+                    players.set(currentIndex, new Player(newName, currentIndex));
                     upDateDetailString();
                 }
 
@@ -159,6 +159,5 @@ public class PlayerPanel extends ChildPanel {
     public ArrayList<Player> getPlayers() {
         return this.players;
     }
-    
 
 }

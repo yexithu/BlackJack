@@ -31,11 +31,8 @@ public class MainFrame extends JFrame {
     private int currentPlayerIndex = 0;
 
     public MainFrame() {
-        game = new Game("Martin");
+//        game = new Game("Martin");
         playerSet = new PlayerSet();
-        playerSet.readSet();
-
-        System.out.println(playerSet.getSet().size());
         setSize(646, 389);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMenuPanel();
@@ -67,6 +64,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onExitClicked() {
+                game.save();
                 remove(betPanel);
                 setMenuPanel();
                 paintComponents(getGraphics());
@@ -126,6 +124,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onExitClicked() {
+                game.save();
                 remove(playPanel);
                 setMenuPanel();
                 paintComponents(getGraphics());
@@ -198,11 +197,14 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onStart() {
-                remove(menuPanel);
-                setBetPanel();
-                paintComponents(getGraphics());
-                setGame();
-                paintComponents(getGraphics());
+                game = new Game();
+                if (game.setPlayer(currentPlayerIndex)) {
+                    remove(menuPanel);
+                    setBetPanel();
+                    paintComponents(getGraphics());
+                    setGame();
+                    paintComponents(getGraphics());
+                }
             }
 
             @Override
@@ -230,7 +232,7 @@ public class MainFrame extends JFrame {
         playerPanel = new PlayerPanel(playerSet.getSet());
         add(playerPanel);
         paintComponents(getGraphics());
-        
+
         playerPanel.setOnExitListener(new ChildPanel.ExitClickedListener() {
 
             @Override

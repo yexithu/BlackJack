@@ -24,17 +24,25 @@ public class Player extends Hands implements Serializable {
     private int DealCount;//游戏局数计数
     private int Win, Lose, Push;//输赢平计数
 
-    public Player(String n) {
-        Name = n;
+    public Player(String Name, int index) {
+        this.Name = Name;
         Counter = 1000;
         Insure = false;
         Surrender = false;
-        index = count++;
+        this.index = index;
     }
 
     public Player(int index) {
         this.index = index;
         Name = null;
+    }
+
+    public Player(int index, String Name) {
+        this.index = index;
+        this.Name = Name;
+        Counter = 1000;
+        Insure = false;
+        Surrender = false;
     }
 
     public int getCounter() {
@@ -148,16 +156,16 @@ public class Player extends Hands implements Serializable {
     public int getIndex() {
         return index;
     }
-    
+
     public String getName() {
         return this.Name;
     }
-    
+
     public String getHtmlString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<html>" + "玩家名: ").append(Name).append("<br/>");
         stringBuilder.append("资产: ").append(String.valueOf(this.Counter)).append("<br/>");
-        stringBuilder.append("游戏局数: " ).append(String.valueOf(this.DealCount)).append("<br/>");
+        stringBuilder.append("游戏局数: ").append(String.valueOf(this.DealCount)).append("<br/>");
         stringBuilder.append("胜利局数: ").append(String.valueOf(this.Win)).append("<br/>");
         stringBuilder.append("平局数: ").append(String.valueOf(this.Push)).append("<br/>");
         stringBuilder.append("失败局数: ").append(String.valueOf(this.Lose)).append("<br/>").append("</html>");
