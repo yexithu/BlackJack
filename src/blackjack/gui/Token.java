@@ -5,14 +5,10 @@
  */
 package blackjack.gui;
 
-import java.awt.AWTException;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

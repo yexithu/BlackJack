@@ -6,11 +6,9 @@
 package blackjack.gui;
 
 import blackjack.models.Card;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
