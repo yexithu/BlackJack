@@ -16,14 +16,14 @@ import java.util.ArrayList;
 public class Player extends Hands implements Serializable {
 
     private final String Name;//名字
-    private final int index;
-    private static int count = 0;
+    private final int index;//对应的存档序号
     private int Counter;//筹码数
     private boolean Insure, Surrender, Split;//保险标志，投降标志，分牌标志
     private ArrayList<Boolean> Surrenders;//投降标志组
     private int DealCount;//游戏局数计数
     private int Win, Lose, Push;//输赢平计数
 
+    //根据
     public Player(String Name, int index) {
         this.Name = Name;
         Counter = 1000;
@@ -32,23 +32,18 @@ public class Player extends Hands implements Serializable {
         this.index = index;
     }
 
+    //生成一个只有存档序号的Player对象
     public Player(int index) {
         this.index = index;
         Name = null;
     }
 
-    public Player(int index, String Name) {
-        this.index = index;
-        this.Name = Name;
-        Counter = 1000;
-        Insure = false;
-        Surrender = false;
-    }
-
+    //获得玩家当前拥有筹码数
     public int getCounter() {
         return Counter;
     }
 
+    //更新玩家筹码数
     public void changeCounter(int change) {
         Counter += change;
     }
@@ -161,6 +156,7 @@ public class Player extends Hands implements Serializable {
         return this.Name;
     }
 
+    //获取玩家统计信息
     public String getHtmlString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<html>" + "玩家名: ").append(Name).append("<br/>");

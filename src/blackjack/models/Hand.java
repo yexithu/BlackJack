@@ -12,25 +12,13 @@ import java.util.ArrayList;
  * @author Martin
  */
 //一副手牌的抽象表示
-public class Hand implements Cloneable {
+public class Hand {
 
     private final ArrayList<Card> Cards;//用Card对象的ArrayList表示手牌
     private boolean Soft = false, BJ = false;//Soft:手牌点数是否为软点 BJ：手牌是否是BlackJack
 
     public Hand() {
         Cards = new ArrayList();
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Hand o = null;
-        try {
-            o = (Hand) super.clone();
-            o.Cards.addAll((ArrayList) Cards.clone());
-        } catch (CloneNotSupportedException e) {
-            System.out.println(e.toString());
-        }
-        return o;
     }
 
     //清空手牌
@@ -60,6 +48,7 @@ public class Hand implements Cloneable {
         return Cards.get(0).Value.Value;
     }
 
+    //获得指定位置的手牌
     public Card getCard(int index) {
         return Cards.get(index);
     }
@@ -74,6 +63,7 @@ public class Hand implements Cloneable {
         return Cards.get(0).equals(Cards.get(1));
     }
 
+    //判断是否软点
     public boolean isSoft() {
         return Soft;
     }
@@ -85,6 +75,7 @@ public class Hand implements Cloneable {
         return BJ;
     }
 
+    //游戏开始时设置BJ标志
     public void setBJ() {
         setBJ(getTotal() == 21);
     }

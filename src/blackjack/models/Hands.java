@@ -15,29 +15,34 @@ import java.util.ArrayList;
 //手牌堆
 public class Hands {
 
-    protected ArrayList<Hand> HandArray;
+    protected ArrayList<Hand> HandArray;//用于表示一个手牌对象的数组
 
     public Hands() {
         HandArray = new ArrayList();
         HandArray.add(new Hand());
     }
 
+    //判断能否分牌
     public boolean isSplit(int i) {
         return HandArray.get(i).canSplit();
     }
 
+    //判断是否软点
     public boolean isSoft(int i) {
         return HandArray.get(i).isSoft();
     }
 
+    //判断是否爆牌
     public boolean isBust(int i) {
         return HandArray.get(i).isBust();
     }
 
+    //获取手牌总点数
     public int getTotal(int i) {
         return HandArray.get(i).getTotal();
     }
 
+    //发牌
     public void deal(int i, Card c) {
         HandArray.get(i).deal(c);
     }
@@ -50,6 +55,7 @@ public class Hands {
         deal(2, HandArray.get(0).getCard(1));
     }
 
+    //获取手牌堆中的手牌总数
     public int getHandNum() {
         return HandArray.size();
     }

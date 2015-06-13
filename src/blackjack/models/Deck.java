@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Martin
  */
 //一个牌堆的抽象表示
-public class Deck implements Cloneable {
+public class Deck {
 
     private final ArrayList<Card> Cards;//用Card对象的ArrayList表示牌堆
     private final int Num;//属性：牌堆所包含的扑克牌副数
@@ -36,20 +36,6 @@ public class Deck implements Cloneable {
                 j++;
             }
         }
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Deck o = null;
-        try {
-            o = (Deck) super.clone();
-            for (int i = 0; i < Cards.size(); i++) {
-                o.Cards.set(i, (Card) Cards.get(i).clone());
-            }
-        } catch (CloneNotSupportedException e) {
-            System.out.println(e.toString());
-        }
-        return o;
     }
 
     //根据渗透率判断是否需要洗牌

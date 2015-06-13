@@ -12,14 +12,16 @@ import java.util.ArrayList;
  *
  * @author Martin
  */
+//用于对玩家信息的文件存储和读取
 public class PlayerSet {
 
-    private ArrayList<Player> set;
+    private ArrayList<Player> set;//固定的4个存档位置
 
     public PlayerSet() {
-        set = new ArrayList();
+        set = new ArrayList(4);
     }
 
+    //检查存档文件，如果不存在则生成一个空账户的存档文件
     public void initialSet() {
         for (int index = 0; index < 4; index++) {
             File file = new File("res/player" + index + ".txt");
@@ -30,12 +32,14 @@ public class PlayerSet {
         }
     }
 
+    //一次性写入所有存档
     public void writeSet() {
         for (Player p : set) {
             writePlayer(p);
         }
     }
 
+    //一次性读取所有存档
     public void readSet() {
         set.clear();
         for (int index = 0; index < 4; index++) {
@@ -43,6 +47,7 @@ public class PlayerSet {
         }
     }
 
+    //写入给定Player对象对应的存档
     public static void writePlayer(Player p) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("res/player" + p.getIndex() + ".txt"));
@@ -54,6 +59,7 @@ public class PlayerSet {
         }
     }
 
+    //读取给定index位置的存档，恢复为Player对象并传出
     public static Player readPlayer(int index) {
         Player p = new Player(index);
         try {
