@@ -81,7 +81,7 @@ public class PlayerPanel extends ChildPanel {
     }
 
     private void setDetailLabel() {
-        this.detailTextLabel = new WhiteBorderLabel(280, 260);
+        this.detailTextLabel = new WhiteBorderLabel(280, 290);
         detailTextLabel.setLocation(200, 30);
         upDateDetailString();
         add(detailTextLabel);
@@ -110,7 +110,7 @@ public class PlayerPanel extends ChildPanel {
     }
 
     public void setResetButton() {
-        this.resetButton = new WhiteBorderLabel(120, 40);
+        this.resetButton = new WhiteBorderLabel(120, 35);
         resetButton.setLocation(500, 240);
         resetButton.setFont(new Font(null, Font.PLAIN, 20));
         resetButton.setText("新建存档");
@@ -141,8 +141,8 @@ public class PlayerPanel extends ChildPanel {
     }
 
     public void setResetAllButton() {
-        this.resetAllButton = new WhiteBorderLabel(120, 40);
-        resetAllButton.setLocation(500, 290);
+        this.resetAllButton = new WhiteBorderLabel(120, 35);
+        resetAllButton.setLocation(500, 285);
         resetAllButton.setFont(new Font(null, Font.PLAIN, 20));
         resetAllButton.setText("重置所有");
         resetAllButton.setVisible(true);

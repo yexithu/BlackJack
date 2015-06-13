@@ -59,12 +59,12 @@ public class Game {
         if (Player.getName() == null) {
             String newName;
             while (true) {
-                newName = JOptionPane.showInputDialog("检测到您未设置账户，请输入新账户名字");
+                newName = JOptionPane.showInputDialog("检测到您未设置账户，请输入新账户名");
                 if (newName != null) {
                     if (newName.length() == 0) {
                         JOptionPane.showMessageDialog(null, "输入为空", "不合法的输入", JOptionPane.WARNING_MESSAGE);
                     } else if (newName.length() > 10) {
-                        JOptionPane.showMessageDialog(null, "名字长度不能超过10", "不合法的输入", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "账户名长度不能超过10", "不合法的输入", JOptionPane.WARNING_MESSAGE);
                     } else {
                         break;
                     }
