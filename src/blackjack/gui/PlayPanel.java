@@ -199,10 +199,6 @@ public class PlayPanel extends ChildPanel {
         if (index == 0 || index == 1) {
             playerActionListener.onGameOver();
         } else {
-            for (JLabel tagLabel : messageTags) {
-                tagLabel.setVisible(false);
-                tagLabel.setEnabled(false);
-            }
             setChanged();
         }
     }
@@ -317,7 +313,10 @@ public class PlayPanel extends ChildPanel {
     }
 
     public void setChanged() {
-
+        for (JLabel tagLabel : messageTags) {
+            tagLabel.setVisible(false);
+            tagLabel.setEnabled(false);
+        }
         currenSet = 3 - currenSet;
         for (Poker poker : hands.get(3 - currenSet)) {
             new Animation.PokerSpilt(this, poker, 1);
