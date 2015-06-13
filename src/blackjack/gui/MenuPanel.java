@@ -64,10 +64,10 @@ public class MenuPanel extends JPanel {
         helpLabel.setLocation(60, 230);
         playerLabel = new BigTextLabel("Player");
         add(playerLabel);
-        playerLabel.setLocation(410, 50);
+        playerLabel.setLocation(460, 50);
         aboutLabel = new BigTextLabel("About");
         add(aboutLabel);
-        aboutLabel.setLocation(410, 230);
+        aboutLabel.setLocation(460, 230);
 
     }
 

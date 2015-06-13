@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
 //        game = new Game("Martin");
         JFrame temp = this;
         playerSet = new PlayerSet();
-        setSize(646, 389);
+        setSize(650, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMenuPanel();
         setResizable(false);
