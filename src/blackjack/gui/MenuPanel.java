@@ -7,7 +7,6 @@ package blackjack.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
@@ -49,7 +48,7 @@ public class MenuPanel extends JPanel {
     private BigTextLabel playerLabel;
     private BigTextLabel aboutLabel;
     private MainMenuClickedListener mainMenuClickedListener;
-    static private ImageIcon backgroundIcon = new ImageIcon(MenuPanel.class.getResource("/res/mainPanelBackGround.png"));
+    private static final ImageIcon backgroundIcon = new ImageIcon(MenuPanel.class.getResource("/res/mainPanelBackGround.png"));
 
     public MenuPanel() {
         setLayout(null);

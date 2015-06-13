@@ -10,13 +10,9 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  *
@@ -33,7 +29,6 @@ public class PlayerPanel extends ChildPanel {
             setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
             setHorizontalAlignment(JLabel.CENTER);
             setVerticalAlignment(JLabel.CENTER);
-
             setFont(new java.awt.Font("Dialog", 1, 25));
             setForeground(Color.WHITE);
         }
@@ -52,16 +47,10 @@ public class PlayerPanel extends ChildPanel {
         setPlayerTags(players);
         setDetailLabel();
         setResetButton();
-
     }
 
     private void setPlayerTags(ArrayList<Player> players) {
         playerTags = new ArrayList<>(4);
-//        players = new ArrayList<>(4);
-
-//        for (int i = 0; i < 4; ++i) {
-//            players.add(new Player(i));
-//        }
         this.players = players;
         for (int i = 0; i < 4; ++i) {
             WhiteBorderLabel playTag = new WhiteBorderLabel(150, 50);
@@ -77,7 +66,6 @@ public class PlayerPanel extends ChildPanel {
                     currentIndex = playTag.index;
                     upDateDetailString();
                     upDateBorderColor();
-
                 }
             });
             playTag.setLocation(20, 30 + 80 * i);
@@ -92,7 +80,6 @@ public class PlayerPanel extends ChildPanel {
     private void setDetailLabel() {
         this.detailTextLabel = new WhiteBorderLabel(320, 280);
         detailTextLabel.setLocation(200, 30);
-
         upDateDetailString();
         add(detailTextLabel);
     }
@@ -124,7 +111,6 @@ public class PlayerPanel extends ChildPanel {
         resetButton.setLocation(550, 270);
         resetButton.setText("reset");
         resetButton.setVisible(true);
-
         resetButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
@@ -141,12 +127,10 @@ public class PlayerPanel extends ChildPanel {
                         break;
                     }
                 }
-
                 if (newName != null) {
                     players.set(currentIndex, new Player(newName, currentIndex));
                     upDateDetailString();
                 }
-
             }
         });
         add(resetButton);
@@ -159,5 +143,4 @@ public class PlayerPanel extends ChildPanel {
     public ArrayList<Player> getPlayers() {
         return this.players;
     }
-
 }

@@ -8,13 +8,10 @@ package blackjack.gui;
 import blackjack.models.Card;
 import blackjack.models.Game;
 import blackjack.models.PlayerSet;
-import java.awt.FlowLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.ImageIcon;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,11 +24,12 @@ public class MainFrame extends JFrame {
     private BetPanel betPanel;
     private PlayPanel playPanel;
     private PlayerPanel playerPanel;
-    private PlayerSet playerSet;
+    private final PlayerSet playerSet;
     private int currentPlayerIndex = 0;
 
     public MainFrame() {
 //        game = new Game("Martin");
+        JFrame temp = this;
         playerSet = new PlayerSet();
         setSize(646, 389);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -40,6 +38,15 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setTitle("BlackJack");
         setVisible(true);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (JOptionPane.showConfirmDialog(temp, "是否确认关闭？", "提示", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+            }
+        });
     }
 
     private void setBetPanel() {
@@ -114,6 +121,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onGameOver() {
+                game.save();
                 remove(playPanel);
                 repaint();
                 setBetPanel();
@@ -124,10 +132,12 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onExitClicked() {
-                game.save();
-                remove(playPanel);
-                setMenuPanel();
-                paintComponents(getGraphics());
+                if (JOptionPane.showConfirmDialog(playPanel, "已下赌注将会损失，确认退出？", "提示", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    game.save();
+                    remove(playPanel);
+                    setMenuPanel();
+                    paintComponents(getGraphics());
+                }
             }
         });
     }
@@ -229,6 +239,7 @@ public class MainFrame extends JFrame {
     }
 
     private void setPlayerPanel() {
+        playerSet.initialSet();
         playerPanel = new PlayerPanel(playerSet.getSet());
         add(playerPanel);
         paintComponents(getGraphics());

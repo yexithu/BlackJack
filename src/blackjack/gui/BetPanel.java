@@ -6,24 +6,14 @@
 package blackjack.gui;
 
 import blackjack.models.Card;
-import blackjack.models.Game;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
 
 /**
  *
@@ -45,10 +35,11 @@ public class BetPanel extends ChildPanel {
     public BetPanel() {
         setLayout(null);
         setValueLabels();
-        setDefaultToken(this);
+        setDefaultToken();
         setDefaultCard();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(backgroundImage.getImage(), 0, 0, this);
@@ -66,7 +57,7 @@ public class BetPanel extends ChildPanel {
 
     }
 
-    private void setDefaultToken(JPanel thisPanel) {
+    private void setDefaultToken() {
         tableTokens = new ArrayList<>();
         Token token1 = new Token(1, 100, 85);
         Token token5 = new Token(5, 100, 185);
@@ -82,7 +73,7 @@ public class BetPanel extends ChildPanel {
         defaultTokens.put(1000, token1000);
         for (Integer next : defaultTokens.keySet()) {
             Token defaultToken = defaultTokens.get(next);
-            thisPanel.add(defaultToken);
+            add(defaultToken);
             leftTokensNumber.put(defaultToken.parValue, 10);
             defaultToken.setClickedListener(new Token.TokenClickedListener() {
                 @Override

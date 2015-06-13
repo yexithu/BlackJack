@@ -18,7 +18,6 @@ public class PlayerSet {
 
     public PlayerSet() {
         set = new ArrayList();
-        initialSet();
     }
 
     public void initialSet() {
@@ -33,32 +32,14 @@ public class PlayerSet {
 
     public void writeSet() {
         for (Player p : set) {
-            File file = new File("res/player" + p.getIndex() + ".txt");
-            try {
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-                out.writeObject(p);
-            } catch (FileNotFoundException e) {
-                System.out.println("Player File Not Found!");
-            } catch (IOException e) {
-                System.out.println("Unknown IO Error!");
-            }
+            writePlayer(p);
         }
     }
 
     public void readSet() {
         set.clear();
         for (int index = 0; index < 4; index++) {
-            File file = new File("res/player" + index + ".txt");
-            try {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-                set.add((Player) in.readObject());
-            } catch (FileNotFoundException e) {
-                System.out.println("Player File Not Found!");
-            } catch (IOException e) {
-                System.out.println("Unknown IO Error!");
-            } catch (ClassNotFoundException e) {
-                System.out.println("Player File Corrupted!");
-            }
+            set.add(readPlayer(index));
         }
     }
 

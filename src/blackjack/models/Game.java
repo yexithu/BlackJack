@@ -6,7 +6,6 @@
 package blackjack.models;
 
 import blackjack.gui.Animation;
-import java.awt.HeadlessException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -60,22 +59,18 @@ public class Game {
         if (Player.getName() == null) {
             String newName;
             while (true) {
-                try {
-                    newName = JOptionPane.showInputDialog("检测到您未设置账户，请输入新账户名字");
-                    if (newName != null) {
-                        if (newName.length() == 0) {
-                            JOptionPane.showMessageDialog(null, "输入为空", "不合法的输入", JOptionPane.WARNING_MESSAGE);
-                        } else if (newName.length() > 10) {
-                            JOptionPane.showMessageDialog(null, "名字长度不能超过10", "不合法的输入", JOptionPane.WARNING_MESSAGE);
-                        } else {
-                            break;
-                        }
+                newName = JOptionPane.showInputDialog("检测到您未设置账户，请输入新账户名字");
+                if (newName != null) {
+                    if (newName.length() == 0) {
+                        JOptionPane.showMessageDialog(null, "输入为空", "不合法的输入", JOptionPane.WARNING_MESSAGE);
+                    } else if (newName.length() > 10) {
+                        JOptionPane.showMessageDialog(null, "名字长度不能超过10", "不合法的输入", JOptionPane.WARNING_MESSAGE);
                     } else {
-                        flag = false;
                         break;
                     }
-                } catch (HeadlessException e) {
-                    JOptionPane.showMessageDialog(null, "名字包含不可用的字符", "不合法的输入", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    flag = false;
+                    break;
                 }
             }
             Player = new Player(newName, index);
@@ -88,8 +83,6 @@ public class Game {
         for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
-        cards[0] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
-        cards[2] = new Card(Card.Pattern.DIAMOND, Card.Figure.KNIGHT);
         Player.deal(cards[0]);
         Banker.deal(cards[1]);
         Player.deal(cards[2]);

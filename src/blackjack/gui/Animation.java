@@ -309,9 +309,9 @@ public class Animation {
         static int runTime = 300;
         static double maxScaleRate = 1.5;
         //1 远处 , -1 进出
-        private int flag;
+        private final int flag;
         final private JPanel panel;
-        private Poker poker;
+        private final Poker poker;
 
         public PokerSpilt(JPanel panel, Poker poker, int flag) {
             this.panel = panel;
@@ -319,8 +319,8 @@ public class Animation {
             this.flag = flag;
             new Thread(this).start();
         }
-        
-         public PokerSpilt(JPanel panel, Poker poker, int offsetX, int offsetY, int flag) {
+
+        public PokerSpilt(JPanel panel, Poker poker, int offsetX, int offsetY, int flag) {
             this.panel = panel;
             this.poker = poker;
             this.offsetX = offsetX;
@@ -337,7 +337,7 @@ public class Animation {
             int endY = poker.getY() + offY;
             int perFrame = runTime / 10;
             for (int i = 0; i < 10; ++i) {
-                double rate = 1;
+                double rate;
                 if (flag == 1) {
                     rate = 1 - ((1 - 1 / maxScaleRate) * i / 10);
                 } else {
@@ -348,7 +348,7 @@ public class Animation {
                 threadSleep(perFrame);
             }
             poker.setLocation(endX, endY);
-            if(flag == -1) {
+            if (flag == -1) {
                 poker.setCardSize(Poker.width, Poker.height);
             }
         }

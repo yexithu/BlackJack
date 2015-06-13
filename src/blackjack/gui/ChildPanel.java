@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 public class ChildPanel extends JPanel {
 
     private JLabel exitLabel;
-    
+
     public ChildPanel() {
         setExitLabel();
     }
@@ -32,14 +32,15 @@ public class ChildPanel extends JPanel {
         exitLabel.setVisible(true);
         add(exitLabel);
     }
-    
-    public interface ExitClickedListener{
+
+    public interface ExitClickedListener {
+
         public void onExitClicked();
     }
-    
+
     public void setOnExitListener(ExitClickedListener exitClickedListener) {
         exitLabel.addMouseListener(new MouseAdapter() {
-            @Override 
+            @Override
             public void mousePressed(MouseEvent me) {
                 exitClickedListener.onExitClicked();
             }

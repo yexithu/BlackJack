@@ -5,7 +5,6 @@
  */
 package blackjack.gui;
 
-import static blackjack.gui.BetPanel.cardGui;
 import blackjack.models.Card;
 import blackjack.models.Game;
 import java.awt.Color;
@@ -18,7 +17,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  *
@@ -40,7 +38,7 @@ public class PlayPanel extends ChildPanel {
     private JLabel betValueLabel;
     private JLabel leftValueLabel;
     private JButton spiltButton;
-    private int pokerIndex = 0;
+    private final int pokerIndex = 0;
     Hashtable<Integer, ArrayList<Poker>> hands;
 
     public PlayPanel() {
@@ -158,7 +156,7 @@ public class PlayPanel extends ChildPanel {
     }
 
     public void dealAnimation(int index, Poker poker, boolean toTurn) {
-        int endX = 0, endY = 190;
+        int endX, endY = 190;
         if (index == 3) {
             endY = 15;
         }
@@ -179,12 +177,12 @@ public class PlayPanel extends ChildPanel {
     }
 
     public void showMessageDialog(String input) {
-        JOptionPane.showMessageDialog(this, input, "Hint", JOptionPane.QUESTION_MESSAGE);
+        JOptionPane.showMessageDialog(this, input, "提示", JOptionPane.PLAIN_MESSAGE);
     }
 
     public void showChoiceDialog() {
 
-        int result = JOptionPane.showConfirmDialog(this, "Take Insurerance?");
+        int result = JOptionPane.showConfirmDialog(this, "是否购买保险？", "庄家可能拿到BJ", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             this.totalLeftValue -= this.totalBetValue / 2;
             this.totalBetValue += this.totalBetValue / 2;
@@ -195,7 +193,7 @@ public class PlayPanel extends ChildPanel {
     }
 
     public void showResultDialog(int index, Game.State state) {
-        JOptionPane.showMessageDialog(this, String.valueOf(state), "Hint", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, String.valueOf(state), "游戏结果", JOptionPane.PLAIN_MESSAGE);
         if (index == 0 || index == 1) {
             playerActionListener.onGameOver();
         } else {
@@ -204,7 +202,6 @@ public class PlayPanel extends ChildPanel {
     }
 
     public void pokerSetBack() {
-
         new Animation.PokerSpilt(this, hands.get(0).get(0), 1);
     }
 
