@@ -10,7 +10,7 @@ package blackjack.models;
  * @author Martin
  */
 //一张扑克牌的抽象表示
-public class Card implements Cloneable {
+public class Card {
 
     //表示花色的枚举类型
     public static enum Pattern {
@@ -56,17 +56,6 @@ public class Card implements Cloneable {
     public Card(Card.Pattern p, Card.Figure f) {
         Type = p;
         Value = f;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Object o = null;
-        try {
-            o = super.clone();
-        } catch (CloneNotSupportedException e) {
-            System.out.println(e.toString());
-        }
-        return o;
     }
 
     public int getValue() {
