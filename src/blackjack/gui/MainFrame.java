@@ -208,6 +208,7 @@ public class MainFrame extends JFrame {
             @Override
             public void onStart() {
                 game = new Game();
+                playerSet.initialSet();
                 if (game.setPlayer(currentPlayerIndex)) {
                     remove(menuPanel);
                     setBetPanel();

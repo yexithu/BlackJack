@@ -7,6 +7,7 @@ package blackjack.gui;
 
 import blackjack.models.Player;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class PlayerPanel extends ChildPanel {
     private int currentIndex = 0;
     private WhiteBorderLabel detailTextLabel;
     private WhiteBorderLabel resetButton;
+    private WhiteBorderLabel resetAllButton;
 
     public PlayerPanel(ArrayList<Player> players) {
         setLayout(null);
@@ -47,6 +49,7 @@ public class PlayerPanel extends ChildPanel {
         setPlayerTags(players);
         setDetailLabel();
         setResetButton();
+        setResetAllButton();
     }
 
     private void setPlayerTags(ArrayList<Player> players) {
@@ -78,7 +81,7 @@ public class PlayerPanel extends ChildPanel {
     }
 
     private void setDetailLabel() {
-        this.detailTextLabel = new WhiteBorderLabel(320, 280);
+        this.detailTextLabel = new WhiteBorderLabel(280, 260);
         detailTextLabel.setLocation(200, 30);
         upDateDetailString();
         add(detailTextLabel);
@@ -107,16 +110,17 @@ public class PlayerPanel extends ChildPanel {
     }
 
     public void setResetButton() {
-        this.resetButton = new WhiteBorderLabel(70, 40);
-        resetButton.setLocation(550, 270);
-        resetButton.setText("reset");
+        this.resetButton = new WhiteBorderLabel(120, 40);
+        resetButton.setLocation(500, 240);
+        resetButton.setFont(new Font(null, Font.PLAIN, 20));
+        resetButton.setText("新建存档");
         resetButton.setVisible(true);
         resetButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
                 String newName;
                 while (true) {
-                    newName = JOptionPane.showInputDialog("输入名字");
+                    newName = JOptionPane.showInputDialog(null, "输入名字", "新建存档", JOptionPane.PLAIN_MESSAGE);
                     if (newName != null) {
                         if (newName.length() == 0 || newName.length() > 10) {
                             JOptionPane.showMessageDialog(null, newName, "不合法的输入", JOptionPane.WARNING_MESSAGE);
@@ -134,6 +138,26 @@ public class PlayerPanel extends ChildPanel {
             }
         });
         add(resetButton);
+    }
+
+    public void setResetAllButton() {
+        this.resetAllButton = new WhiteBorderLabel(120, 40);
+        resetAllButton.setLocation(500, 290);
+        resetAllButton.setFont(new Font(null, Font.PLAIN, 20));
+        resetAllButton.setText("重置所有");
+        resetAllButton.setVisible(true);
+        resetAllButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent me) {
+                if (JOptionPane.showConfirmDialog(null, "确认重置所有存档？", "提示", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    for (int index = 0; index < 4; index++) {
+                        players.set(index, new Player(null, index));
+                    }
+                    upDateDetailString();
+                }
+            }
+        });
+        add(resetAllButton);
     }
 
     public int getIndex() {
