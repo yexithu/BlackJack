@@ -21,7 +21,7 @@ public class PlayerSet {
         set = new ArrayList(4);
     }
 
-    //检查存档文件，如果不存在则生成一个空账户的存档文件
+    //初始化PlayerSet，检查存档文件是否存在，如不存在则新建空存档文件
     public void initialSet() {
         for (int index = 0; index < 4; index++) {
             File file = new File("res/player" + index + ".txt");

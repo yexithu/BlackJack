@@ -15,13 +15,6 @@ import javax.swing.JOptionPane;
 //游戏过程的抽象表示
 public class Game {
 
-    /**
-     * @return the pool
-     */
-    public int getPool() {
-        return pool;
-    }
-
     //代表游戏结果的枚举类型
     public static enum State {
 
@@ -31,19 +24,10 @@ public class Game {
     private final Banker Banker;
     private final Deck Deck;
     private final Setting Setting;
-    private State Result;//游戏结果（对于没有分牌的简单情况）
     private ArrayList<State> Results;//游戏结果组（有分牌的情况）
     private int pool, bet;//pool：赌池，bet：赌注
-    private GameActionListener gameActionListener;
+    private GameActionListener gameActionListener;//游戏事件监听器
 
-//    public Game(String Name) {
-//        Player = new Player(Name);
-//        Banker = new Banker();
-//        Setting = blackjack.models.Setting.example();
-//        Deck = new Deck(Setting.getDeckNum());
-//        Results = new ArrayList();
-//        Deck.shuffle();//第一次运行前先洗牌
-//    }
     public Game() {
         Player = null;
         Banker = new Banker();
@@ -53,6 +37,7 @@ public class Game {
         Deck.shuffle();//第一次运行前先洗牌
     }
 
+    //检测是否已存在存档，如果没有则提示新建
     public boolean setPlayer(int index) {
         boolean flag = true;
         Player = PlayerSet.readPlayer(index);
@@ -78,14 +63,15 @@ public class Game {
         return flag;
     }
 
+    //初始化游戏
     public void initial() {
         Card[] cards = new Card[4];
         for (int i = 0; i < 4; ++i) {
             cards[i] = Deck.getCard();
         }
-        Player.deal(cards[0]);
+        Player.deal(0, cards[0]);
         Banker.deal(cards[1]);
-        Player.deal(cards[2]);
+        Player.deal(0, cards[2]);
         Banker.deal(cards[3]);
         Player.setBJ();
         Banker.setBJ();
@@ -123,8 +109,8 @@ public class Game {
         });
     }
 
+    //重置游戏
     public void refresh() {
-        Result = State.NULL;
         Player.clear();
         Banker.clear();
         Player.setInsure(false);
@@ -134,6 +120,7 @@ public class Game {
         pool = 0;
     }
 
+    //庄家要牌操作
     private void bankerAct() {
         gameActionListener.onBankerDisplayCard();
         while (!Banker.isBust() && Banker.continueHit()) {
@@ -155,10 +142,12 @@ public class Game {
         }
     }
 
+    //根据渗透率判断是否需要洗牌
     public boolean isShuffle() {
         return Deck.isShuffle(Setting.getPenetration());
     }
 
+    //洗牌操作
     public void shuffle() {
         if (isShuffle()) {
             Deck.shuffle();
@@ -169,26 +158,31 @@ public class Game {
         }
     }
 
+    //烧牌操作
     public void burn() {
         int i = Setting.getBurnCardNum();
         Deck.burn(i);
     }
 
+    //检查玩家下注是否在赌注限制范围内
     public boolean checkBet(int betNum) {
         return !(betNum < Setting.getBetMin() || betNum > Setting.getBetMax());
     }
 
+    //玩家下注操作
     public void bet(int betNum) {
         Player.changeCounter(-betNum);
         bet = betNum;
         pool = bet;
     }
 
+    //玩家买保险操作
     public void playerInsure() {
         Player.changeCounter(-getPool() / 2);
         Player.setInsure(true);
     }
 
+    //玩家要牌操作
     public void playerHit(int index) {
         Card c = Deck.getCard();
         Player.deal(index, c);
@@ -196,6 +190,7 @@ public class Game {
         playerBustControl(index);
     }
 
+    //玩家投降操作
     public void playerSurrend(int index) {
         Player.setSurrenders(index, true);
         Results.set(index, State.BANKER_WIN);
@@ -208,6 +203,7 @@ public class Game {
         }
     }
 
+    //玩家停牌操作
     public void playerStand(int index) {
         if (index == 1) {
             Card c = Deck.getCard();
@@ -228,6 +224,7 @@ public class Game {
         }
     }
 
+    //计算输赢平
     private State compare(int index) {
         State result;
         if (Player.getTotal(index) < Banker.getTotal()) {
@@ -240,6 +237,7 @@ public class Game {
         return result;
     }
 
+    //计算游戏结果，更新数据
     public void result(int index) {
         try {
             switch (Results.get(index)) {
@@ -271,6 +269,7 @@ public class Game {
         }
     }
 
+    //玩家加倍操作
     public void playerDouble(int index) {
         Player.changeCounter(-bet);
         pool += bet;
@@ -303,9 +302,9 @@ public class Game {
                 }
             }
         });
-
     }
 
+    //玩家爆牌判断和对应操作
     private void playerBustControl(int index) {
         if (Player.isBust(index)) {
             gameActionListener.showTagMessage(0, 0);
@@ -341,6 +340,7 @@ public class Game {
         }
     }
 
+    //分牌操作
     public void split() {
         Results.add(State.NULL);
         Results.add(State.NULL);
@@ -352,41 +352,47 @@ public class Game {
         gameActionListener.onDeal(1, c);
     }
 
-    public void splitInitial() {
-        Results = new ArrayList();
-        for (int i = 0; i < Player.getHandNum(); i++) {
-            Results.add(State.NULL);
-        }
-        Player.initialSurrenders();
-    }
-
-    public void playerBust(int index) {
-        gameActionListener.showTagMessage(0, 0);
-        Results.set(index, State.BANKER_WIN);
-        result(index);
-//        gameActionListener.onShowResult(index, State.BANKER_WIN);
-    }
-
+//    public void splitInitial() {
+//        Results = new ArrayList();
+//        for (int i = 0; i < Player.getHandNum(); i++) {
+//            Results.add(State.NULL);
+//        }
+//        Player.initialSurrenders();
+//    } 
+    //获得当前游戏中玩家拥有的筹码数
     public int getPlayerCounter() {
         return Player.getCounter();
     }
 
+    //获得当前游戏设置的赌注下限
     public int getBetMax() {
         return Setting.getBetMax();
     }
 
+    //获得当前游戏设置的赌注下限
     public int getBetMin() {
         return Setting.getBetMin();
     }
 
+    /**
+     * @return the pool
+     */
+    //获得当前游戏中赌池中的筹码数目
+    public int getPool() {
+        return pool;
+    }
+
+    //保存游戏记录到指定存档
     public void save() {
         PlayerSet.writePlayer(Player);
     }
 
+    //设置游戏事件监听器
     public void setGameActionListener(GameActionListener gameActionListener) {
         this.gameActionListener = gameActionListener;
     }
 
+    //游戏事件监听器
     public interface GameActionListener {
 
         void onInitial(Card[] cards);

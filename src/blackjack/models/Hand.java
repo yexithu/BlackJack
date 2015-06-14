@@ -53,7 +53,7 @@ public class Hand {
         return Cards.get(index);
     }
 
-    //发手牌
+    //向手牌中发牌
     public void deal(Card c) {
         Cards.add(c);
     }
@@ -87,6 +87,7 @@ public class Hand {
         this.BJ = BJ;
     }
 
+    //判断是否爆掉
     public boolean isBust() {
         return getTotal() > 21;
     }

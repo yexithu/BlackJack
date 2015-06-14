@@ -23,7 +23,7 @@ public class Player extends Hands implements Serializable {
     private int DealCount;//游戏局数计数
     private int Win, Lose, Push;//输赢平计数
 
-    //根据
+    //根据给定名字和存档序号生成一个初始的Player对象
     public Player(String Name, int index) {
         this.Name = Name;
         Counter = 1000;
@@ -32,7 +32,7 @@ public class Player extends Hands implements Serializable {
         this.index = index;
     }
 
-    //生成一个只有存档序号的Player对象
+    //生成一个只有存档序号的空Player对象
     public Player(int index) {
         this.index = index;
         Name = null;
@@ -120,14 +120,7 @@ public class Player extends Hands implements Serializable {
         return HandArray.get(0).isBJ();
     }
 
-    public boolean isBust() {
-        return HandArray.get(0).isBust();
-    }
-
-    public void deal(Card c) {
-        HandArray.get(0).deal(c);
-    }
-
+    //游戏开始时初始化BJ
     public void setBJ() {
         HandArray.get(0).setBJ();
     }
@@ -136,10 +129,7 @@ public class Player extends Hands implements Serializable {
         HandArray.get(0).setBJ(BJ);
     }
 
-    public int getTotal() {
-        return HandArray.get(0).getTotal();
-    }
-
+    //清空手牌
     public void clear() {
         HandArray = new ArrayList();
         HandArray.add(new Hand());
