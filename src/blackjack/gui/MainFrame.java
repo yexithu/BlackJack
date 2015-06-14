@@ -42,6 +42,7 @@ public class MainFrame extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 if (JOptionPane.showConfirmDialog(temp, "是否确认关闭？", "提示", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    game.save();
                     System.exit(0);
                 }
             }
