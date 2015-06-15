@@ -29,8 +29,10 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
 //        game = new Game("Martin");
+        game = new Game();
         JFrame temp = this;
         playerSet = new PlayerSet();
+        playerSet.initialSet();
         setSize(646, 388);
         setMenuPanel();
         setResizable(false);
@@ -211,8 +213,6 @@ public class MainFrame extends JFrame {
 
             @Override
             public void onStart() {
-                game = new Game();
-                playerSet.initialSet();
                 if (game.setPlayer(currentPlayerIndex)) {
                     remove(menuPanel);
                     setBetPanel();
@@ -244,7 +244,6 @@ public class MainFrame extends JFrame {
     }
 
     private void setPlayerPanel() {
-        playerSet.initialSet();
         playerPanel = new PlayerPanel(playerSet.getSet());
         add(playerPanel);
         paintComponents(getGraphics());

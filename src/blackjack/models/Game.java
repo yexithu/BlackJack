@@ -384,7 +384,9 @@ public class Game {
 
     //保存游戏记录到指定存档
     public void save() {
-        PlayerSet.writePlayer(Player);
+        if (Player != null) {
+            PlayerSet.writePlayer(Player);
+        }
     }
 
     //设置游戏事件监听器
